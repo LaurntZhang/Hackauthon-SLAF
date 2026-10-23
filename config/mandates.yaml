@@ -1,0 +1,59 @@
+# Mandats des agents (7 piliers : rôle, mission, contexte, outils, limites, sortie, escalade).
+# Un nouvel agent se branche en ajoutant une entrée ici, sans modifier le module FinGuard.
+version: "2026.10.23-1"
+
+agents:
+  - agent_id: proposer
+    role: proposer
+    mission: "Proposer des intentions d'allocation tactique pour le fonds Alpha"
+    context: "Données marché et portefeuille assainies par le Firewall"
+    allowed_tools: [read_market, read_portfolio, propose_trade]
+    allowed_assets: [bond, equity, cash]
+    max_amount: "100000"
+    output: TransactionIntent
+    escalation: "Toute intention > 10 000 € passe en validation humaine"
+    expires_at: "2027-12-31T23:59:59Z"
+
+  - agent_id: risk_judge
+    role: risk_judge
+    mission: "Évaluer le risque de marché et de concentration d'une intention"
+    context: "Intention et expositions du portefeuille"
+    allowed_tools: [read_exposures]
+    allowed_assets: [bond, equity, cash]
+    max_amount: "0"
+    output: JudgeVerdict
+    escalation: "Veto ou abstention : validation humaine"
+    expires_at: "2027-12-31T23:59:59Z"
+
+  - agent_id: compliance_judge
+    role: compliance_judge
+    mission: "Vérifier la conformité réglementaire et KYC d'une intention"
+    context: "Intention, liste blanche des contreparties, référentiel"
+    allowed_tools: [read_kyc, read_whitelist]
+    allowed_assets: [bond, equity, cash]
+    max_amount: "0"
+    output: JudgeVerdict
+    escalation: "Veto ou abstention : validation humaine"
+    expires_at: "2027-12-31T23:59:59Z"
+
+  - agent_id: executor
+    role: executor
+    mission: "Préparer l'ordre conforme à une autorisation, sans pouvoir de décision"
+    context: "Authorization et intention approuvée"
+    allowed_tools: [prepare_order]
+    allowed_assets: [bond, equity, cash]
+    max_amount: "100000"
+    output: ExecutionOrder
+    escalation: "Toute divergence est bloquée par l'Integrity Engine"
+    expires_at: "2027-12-31T23:59:59Z"
+
+  - agent_id: supervisor
+    role: supervisor
+    mission: "Observer le bus d'événements, alerter et demander une quarantaine d'agent"
+    context: "Bus d'événements en lecture seule"
+    allowed_tools: [read_events, raise_alert, request_quarantine]
+    allowed_assets: []
+    max_amount: "0"
+    output: "Alert, KillRequest"
+    escalation: "Ne vote pas, ne décide pas, n'exécute pas ; seul un humain coupe globalement"
+    expires_at: "2027-12-31T23:59:59Z"

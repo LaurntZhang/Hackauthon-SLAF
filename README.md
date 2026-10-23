@@ -64,16 +64,27 @@ Six scénarios, chacun associé à un test (détail dans le cadrage, §9) :
 
 ## Lancer le projet
 
-Le code se trouve dans le dépôt [Hackathlon_FINAXYS](..). Ce dossier ne contient que la documentation de
-l'équipe.
+Prérequis : Python 3.13 et [uv](https://docs.astral.sh/uv/).
 
-```powershell
-# depuis la racine du dépôt Hackathlon_FINAXYS
-.\venv\Scripts\python.exe -m pytest -q
-.\venv\Scripts\python.exe -m scripts.run_demo
+```bash
+uv sync                                   # crée .venv et installe les dépendances
+uv run pytest -q                          # 146 tests : invariants, scénarios S1 à S6, API
+uv run python -m scripts.run_demo         # plan B : S1 à S6 en CLI, hors ligne
+uv run uvicorn src.api.main:app --reload  # API sur http://127.0.0.1:8000/docs
 ```
 
-Le mode démonstration fonctionne sans réseau ni clé API.
+Le mode démonstration fonctionne sans réseau ni clé API (`FINGUARD_LLM=off` par défaut).
+
+| Variable | Défaut | Rôle |
+| --- | --- | --- |
+| `FINGUARD_HITL_SECRET` | secret de démo (alerte au démarrage) | clé HMAC des approbations et commandes d'opérateur |
+| `FINGUARD_AUDIT_PATH` | `logs/audit.jsonl` | journal d'audit chaîné |
+| `FINGUARD_CHECKPOINT_DB` | `data/checkpoints.sqlite` (`memory` possible) | checkpoints LangGraph pour la reprise HITL |
+| `FINGUARD_LLM` / `FINGUARD_LLM_MODEL` | `off` / `openai:gpt-4.1-mini` | agents LLM optionnels (`uv sync --extra llm`) |
+| `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` | absentes | export Langfuse optionnel (`uv sync --extra langfuse`) |
+
+Signer une approbation pour curl ou le front :
+`uv run python -m scripts.sign approval --thread <thread_id> --action approve --approver risk_officer_1 --intent-hash <intent_hash>`.
 
 ## Limites assumées
 
