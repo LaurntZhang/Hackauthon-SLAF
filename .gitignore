@@ -36,10 +36,11 @@ pnpm-debug.log*
 *.tsbuildinfo
 
 # Native React Native build artifacts (keep source projects tracked)
-/android/.gradle/
+**/.gradle/
+**/.kotlin/
+/android/build/
 /android/app/build/
 /android/local.properties
-/android/.kotlin/
 /ios/Pods/
 /ios/build/
 /ios/DerivedData/
@@ -65,6 +66,7 @@ pnpm-debug.log*
 # Generated runtime data
 /logs/
 checkpoints.sqlite*
+/data/*.sqlite*
 *.log
 
 # Temporary and operating-system files
