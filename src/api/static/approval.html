@@ -3,24 +3,27 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="color-scheme" content="dark">
-  <meta name="theme-color" content="#050b1a">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#fbfaf7">
   <title>ManAgent · Validation du gérant</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='3' fill='%2315212e'/%3E%3Cpath d='M12 4.5l6 2.4v4.6c0 3.7-2.5 6.3-6 7.3-3.5-1-6-3.6-6-7.3V6.9l6-2.4z' fill='none' stroke='%23f4f1ea' stroke-width='1.6'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="css/managent.css">
 </head>
 <body class="mobile-page">
   <h1 class="sr-only">ManAgent · validation du gérant du fonds Alpha</h1>
   <header class="mobile-bar">
     <span class="brand-mark" data-icon="logo"></span>
-    <strong>ManAgent · Gérant du fonds Alpha</strong>
+    <span class="mobile-bar-text"><strong>ManAgent</strong><span>Gérant du fonds Alpha · validation</span></span>
     <span class="chip" id="link-state">recherche…</span>
   </header>
   <main class="mobile-main" id="mobile-body"></main>
+  <p class="mobile-foot">Écran simulé du gérant. La biométrie est remplacée par un code ; chaque décision est signée, liée à l'empreinte de l'ordre et inscrite au journal de preuve.</p>
   <div class="sr-only" id="mobile-status" role="status" aria-atomic="true"></div>
 
   <script src="js/crypto.js"></script>
   <script src="js/icons.js"></script>
   <script src="js/config.js"></script>
+  <script src="js/wording.js"></script>
   <script src="js/hitl-card.js"></script>
   <script src="js/approval.js"></script>
 </body>

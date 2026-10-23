@@ -46,6 +46,21 @@
     chevron: '<path d="M9 6l6 6-6 6"/>',
     backspace: '<path d="M8.5 5H20a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H8.5L3 12l5.5-7z"/><path d="M11.5 9.5l5 5M16.5 9.5l-5 5"/>',
     fingerprint: '<path d="M7 11.5a5 5 0 0 1 10 0v1.5"/><path d="M12 11.5v3.5c0 2-.6 3.8-1.6 5.5"/><path d="M4.5 9a8 8 0 0 1 15 0M4 13.5c.1 2.5-.4 4.5-1 6M20 13v1.5c0 2-.4 4-1.1 5.5M9.5 14.5c0 2.3-.7 4.4-1.9 6.2M14.5 15c0 2-.4 3.8-1.2 5.5"/>',
+    // Ajouts de la refonte « finance éditoriale » : mêmes règles de dessin (24×24, trait 1,8).
+    gate: '<path d="M5 21V4M19 21V4M3 4h18"/><path d="M5 11.5h14"/><path d="M8.5 11.5V21M12 11.5V21M15.5 11.5V21"/>',
+    folder: '<path d="M3 7.5A1.5 1.5 0 0 1 4.5 6H9l2 2h8.5A1.5 1.5 0 0 1 21 9.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5v-11z"/>',
+    building: '<path d="M3 21h18M4.5 10h15M12 3l8 4.5H4L12 3z"/><path d="M6.5 10v8M10 10v8M14 10v8M17.5 10v8"/>',
+    arrowUpRight: '<path d="M7 17L17 7M9 7h8v8"/>',
+    arrowDownRight: '<path d="M7 7l10 10M17 9v8H9"/>',
+    pause: '<rect x="6.5" y="5" width="3.5" height="14" rx="1"/><rect x="14" y="5" width="3.5" height="14" rx="1"/>',
+    pen: '<path d="M3 20.5c2.5 0 3.5-3 5.5-3s2 2 4 2 2.5-1.5 4-1.5"/><path d="M14.5 4.5l3 3L9 16l-3.5.5.5-3.5 8.5-8.5z"/>',
+    split: '<path d="M4 6h5l6 12h5M4 18h5l2-4M15 6h5M13 10l2-4"/>',
+    // Ajouts de la vue « mode jury » : états de parcours et accès aux détails techniques.
+    circleDashed: '<circle cx="12" cy="12" r="8.5" stroke-dasharray="3.2 3.2"/>',
+    progress: '<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor" stroke="none"/>',
+    minusCircle: '<circle cx="12" cy="12" r="8.5"/><path d="M8.5 12h7"/>',
+    terminal: '<rect x="3" y="4.5" width="18" height="15" rx="2"/><path d="M7 9.5l3 2.5-3 2.5M12.5 15h4.5"/>',
+    branch: '<circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="9" r="2.2"/><path d="M6 8.2v7.6M8 6.5c5 0 8 .5 9 1.5M8 17.5c4-1 7.5-3.5 9.2-6.4"/>',
   };
 
   /**

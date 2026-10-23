@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0f1217">
+  <meta name="description" content="ManAgent · mode jury : une opération, plusieurs garde-fous, une décision traçable.">
+  <title>ManAgent · Mode jury · Fonds Alpha</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='3' fill='%230f1217'/%3E%3Cpath d='M12 4.5l6 2.4v4.6c0 3.7-2.5 6.3-6 7.3-3.5-1-6-3.6-6-7.3V6.9l6-2.4z' fill='none' stroke='%2372c4c1' stroke-width='1.6'/%3E%3C/svg%3E">
+  <!-- managent.css fournit la base commune (reset, carte de validation du gérant, téléphone simulé) ; jury.css la vue sombre. -->
+  <link rel="stylesheet" href="css/managent.css">
+  <link rel="stylesheet" href="css/jury.css">
+</head>
+<body class="jv">
+  <a class="skip-link" href="#jv-flow-title">Aller au parcours de l'opération</a>
+
+  <div class="jv-shell">
+    <aside class="jv-side" aria-labelledby="jv-side-title">
+      <div class="jv-brand">
+        <span class="jv-brand-mark" data-icon="logo"></span>
+        <span class="jv-brand-text"><strong>ManAgent</strong><span>FinGuard · mode jury</span></span>
+      </div>
+      <h2 class="jv-side-title" id="jv-side-title">Suivi de l'exécution</h2>
+      <p class="jv-side-sub" id="jv-side-sub">Fonds Alpha · aucune opération</p>
+      <nav aria-label="Étapes de l'opération">
+        <ol class="jv-steps" id="jv-steps"></ol>
+      </nav>
+      <div class="jv-side-foot">
+        <a class="jv-side-link" href="dashboard.html" target="_blank" rel="noopener"><span data-icon="terminal"></span>Vue technique complète</a>
+        <a class="jv-side-link" href="approval.html" target="_blank" rel="noopener"><span data-icon="phone"></span>Écran mobile du gérant</a>
+      </div>
+    </aside>
+
+    <div class="jv-main">
+      <header class="jv-top">
+        <p class="jv-tagline">Une opération, plusieurs garde-fous, une décision traçable.</p>
+        <div class="jv-toolbar" role="toolbar" aria-label="Preuve et pilotage">
+          <button type="button" class="jv-pill" id="jv-journal-btn"><span data-icon="link"></span>Journal de preuve</button>
+          <button type="button" class="jv-pill" id="jv-replay-btn"><span data-icon="replay"></span>Rejouer</button>
+          <button type="button" class="jv-pill" id="jv-export-btn"><span data-icon="download"></span>Exporter la preuve</button>
+          <button type="button" class="jv-pill jv-pill--kill" id="jv-kill-btn"></button>
+        </div>
+      </header>
+
+      <div class="jv-notices" id="jv-notices"></div>
+
+      <section class="jv-summary" aria-label="Synthèse de l'opération">
+        <article class="jv-card jv-card--op" id="jv-card-op" aria-labelledby="jv-card-op-label"></article>
+        <article class="jv-card jv-card--decision" id="jv-card-decision" aria-labelledby="jv-card-decision-label"></article>
+        <article class="jv-card jv-card--proof" id="jv-card-proof" aria-labelledby="jv-card-proof-label"></article>
+      </section>
+
+      <section class="jv-canvas" aria-labelledby="jv-flow-title">
+        <header class="jv-canvas-head">
+          <h1 class="jv-title" id="jv-flow-title" tabindex="-1">Une décision contrôlée de bout en bout</h1>
+          <p class="jv-subtitle">Les agents proposent. ManAgent vérifie. L'humain garde la main.</p>
+        </header>
+        <div class="jv-flow" id="jv-flow">
+          <svg class="jv-edges" id="jv-edges" aria-hidden="true" focusable="false"></svg>
+          <ol class="jv-nodes" id="jv-nodes" aria-label="Parcours de l'opération, de la proposition à la preuve"></ol>
+        </div>
+      </section>
+
+      <section class="jv-explain" id="jv-explain" aria-labelledby="jv-explain-title"></section>
+
+      <form class="jv-action" id="jv-form" novalidate aria-label="Soumettre une opération">
+        <div class="jv-action-field">
+          <label class="sr-only" for="jv-input">Opération à vérifier, en langage courant</label>
+          <span class="jv-action-icon" data-icon="edit"></span>
+          <input class="jv-input" id="jv-input" name="objective" type="text" autocomplete="off" spellcheck="false"
+            placeholder="Ex. acheter 4 000 € d'OAT pour le fonds Alpha…" aria-describedby="jv-parse">
+        </div>
+        <p class="jv-parse" id="jv-parse" aria-live="polite"></p>
+        <div class="jv-action-buttons">
+          <div class="jv-menu-wrap">
+            <button type="button" class="jv-btn jv-btn--ghost" id="jv-scen-btn" aria-expanded="false" aria-controls="jv-scen-menu"><span data-icon="flask"></span>Scénarios</button>
+            <div class="jv-menu" id="jv-scen-menu" hidden></div>
+          </div>
+          <button type="submit" class="jv-btn jv-btn--primary" id="jv-submit"><span data-icon="play"></span>Lancer la vérification</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <dialog id="jv-drawer" class="jv-drawer" aria-labelledby="jv-drawer-title">
+    <div class="jv-drawer-inner">
+      <header class="jv-drawer-head">
+        <p class="jv-drawer-kicker" id="jv-drawer-kicker">Détails techniques</p>
+        <h2 class="jv-drawer-title" id="jv-drawer-title" tabindex="-1"></h2>
+        <button type="button" class="jv-icon-btn" id="jv-drawer-close" aria-label="Fermer le panneau"><span data-icon="x"></span></button>
+      </header>
+      <div class="jv-drawer-body" id="jv-drawer-body"></div>
+    </div>
+  </dialog>
+
+  <dialog id="phone-dialog" class="phone-dialog" aria-label="Téléphone du gérant">
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-status" aria-hidden="true"><span id="phone-clock">--:--</span><span class="phone-notch"></span><span>ManAgent</span></div>
+          <div id="phone-body"></div>
+        </div>
+      </div>
+      <p class="phone-caption">Téléphone du gérant (simulé). La biométrie est remplacée par un code ; la décision est signée et liée à l'empreinte de l'ordre.</p>
+      <div class="phone-actions">
+        <button type="button" class="btn" id="phone-close">Fermer · la décision reste en attente</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="confirm-dialog" class="modal jv-modal" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+    <form method="dialog">
+      <h2 id="confirm-title"></h2>
+      <p id="confirm-text"></p>
+      <div class="modal-actions">
+        <button type="submit" class="jv-btn jv-btn--ghost" value="cancel">Annuler</button>
+        <button type="submit" class="jv-btn" id="confirm-ok" value="ok"></button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="live-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="js/crypto.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/wording.js"></script>
+  <script src="js/simulator.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/transport.js"></script>
+  <script src="js/hitl-card.js"></script>
+  <script src="js/jury.js"></script>
+</body>
+</html>

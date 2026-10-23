@@ -23,7 +23,7 @@
   function idle(text) {
     card = null;
     currentThread = null;
-    body.innerHTML = `<div class="phone-idle">${icon('phone')}<p><strong>Aucune décision en attente.</strong></p><p>${text}</p></div>`;
+    body.innerHTML = `<div class="phone-idle">${icon('phone')}<p><strong>Aucune décision en attente.</strong></p><p>${text}</p><p class="hitl-note">Vous serez sollicité uniquement si une opération dépasse le seuil d'autonomie ou si les contrôles sont en désaccord.</p></div>`;
   }
 
   function isCard(value) {
@@ -45,7 +45,7 @@
           window.setTimeout(() => {
             if (pendingResult && pendingResult.thread === threadId) {
               pendingResult = null;
-              resolve({ ok: false, error: 'Pas de réponse de la tour de contrôle.' });
+              resolve({ ok: false, error: 'Pas de réponse de la salle de contrôle.' });
             }
           }, 4000);
         }),
@@ -72,6 +72,15 @@
       asset_label: 'EuroTech SA',
       intent_hash: MA.crypto.sha256Hex(MA.crypto.canonical({ asset, asset_type, side, amount, currency, counterparty })),
       reasons: ['POL-005', 'QRM-001'],
+      // Exemple illustratif, au format des cartes émises par le moteur (hitl.requested).
+      policy: {
+        outcome: 'ESCALATE', triggered_rules: ['POL-005'], policy_version: MA.config.POLICY_VERSION, effective_max: MA.config.LIMITS.autonomousMax,
+        explanation: `ESCALATE : ${MA.fmt.eur(85000)} dépasse le plafond autonome de ${MA.fmt.eur(MA.config.LIMITS.autonomousMax)}. Validation humaine forcée, quel que soit le vote.`,
+      },
+      quorum: {
+        outcome: 'ESCALATE', mode: 'unanimity', approvals: 1, required: 2, triggered_rules: ['QRM-001'],
+        explanation: 'ESCALATE : Juge Risque oppose son veto. Un veto ne peut être levé que par un humain.',
+      },
       requested_at: new Date().toISOString(),
       verdicts: [
         { judge_id: 'risk_judge', vote: 'veto', confidence: 0.86, rule_ids: ['RJ-SECT'], justification: 'Exposition au secteur Technologie portée à 18,9 % (alerte 18,0 %, limite 20,0 %) : trop concentrée pour un profil prudent.' },
@@ -85,10 +94,10 @@
     body.innerHTML = `
       <div class="phone-idle">
         ${icon('info')}
-        <p><strong>Aucune tour de contrôle détectée.</strong></p>
+        <p><strong>Aucune salle de contrôle détectée.</strong></p>
         <p>Ouvrez dashboard.html dans un autre onglet du même navigateur. Si les pages sont ouvertes en file://,
         servez le dossier en local (par exemple <span class="mono">python -m http.server</span>) pour qu'elles partagent la même origine.</p>
-        <button type="button" class="btn btn-ghost btn-lg" id="demo-btn">${icon('play')}Voir un exemple de carte</button>
+        <button type="button" class="btn btn-lg" id="demo-btn">${icon('play')}Voir un exemple de demande</button>
       </div>`;
     document.getElementById('demo-btn').addEventListener('click', () => {
       card = MA.HitlCard.mount(body, demoCard(), { demo: true, onDecide: async () => ({ ok: true }), getRecord: () => null });
@@ -110,7 +119,7 @@
     if (data.type === 'pending' && isCard(data.card)) {
       show(data);
     } else if (data.type === 'idle') {
-      if (!card || card.decided) idle("La tour de contrôle est connectée. La carte apparaîtra dès qu'une opération sera escaladée.");
+      if (!card || card.decided) idle("La salle de contrôle est connectée. La demande apparaîtra dès qu'une opération sera escaladée.");
     } else if (data.type === 'decision-result' && pendingResult && data.thread_id === pendingResult.thread) {
       pendingResult.resolve({ ok: Boolean(data.ok), error: data.error });
       pendingResult = null;
@@ -121,7 +130,7 @@
     }
   };
 
-  idle('Connexion à la tour de contrôle…');
+  idle('Connexion à la salle de contrôle…');
   channel.postMessage({ type: 'hello' });
   window.setTimeout(() => {
     if (!heard) noTower();
