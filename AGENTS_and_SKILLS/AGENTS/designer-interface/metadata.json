@@ -1,0 +1,33 @@
+{
+  "name": "Designer Interface",
+  "id": "designer-interface",
+  "description": "Conçoit des interfaces et des sites avec un design professionnel, varié et distinctif, explicitement éloigné de l'esthétique générique IA, avec des références humaines et un ancrage finance/fintech.",
+  "platforms": [
+    "GitHub Copilot (VS Code)"
+  ],
+  "model": "Claude Sonnet 4.6 (copilot)",
+  "tools": [
+    "codebase",
+    "editFiles",
+    "search"
+  ],
+  "tags": [
+    "interface",
+    "ui",
+    "ux",
+    "design-system",
+    "finance",
+    "fintech",
+    "accessibility",
+    "responsive"
+  ],
+  "files": [
+    "AGENT.md",
+    "../../.github/agents/designer-interface.agent.md"
+  ],
+  "project": "Hackathon Finaxys 2026 - Gouvernance multi-agents & Finance autonome",
+  "language": "fr",
+  "version": "1.0.0",
+  "createdAt": "2026-10-23",
+  "updatedAt": "2026-10-23"
+}
