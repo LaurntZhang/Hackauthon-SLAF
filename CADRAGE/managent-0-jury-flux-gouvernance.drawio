@@ -1,0 +1,239 @@
+<mxfile host="app.diagrams.net" modified="2026-10-23T22:05:00.000Z" agent="Copilot SDK in VS Code" version="24.7.17">
+  <diagram id="jury-flux-gouvernance" name="Vue jury - chaîne de décision">
+    <mxGraphModel dx="1600" dy="900" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" math="0" shadow="0" defaultFontFamily="Arial">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="ManAgent — la chaîne de décision, sous contrôle" style="text;html=1;align=left;verticalAlign=middle;fontColor=#2F3432;fontFamily=Arial;fontSize=28;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="1160" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="Les agents proposent. Les contrôles confrontent. Seule une décision conforme peut aller jusqu'à l'action." style="text;html=1;align=left;verticalAlign=middle;fontColor=#6C7772;fontFamily=Arial;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="40" y="70" width="1220" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="badge" value="VUE MÉTIER&lt;br&gt;JURY FINAXYS" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFBF8;strokeColor=#8C9691;strokeWidth=1;fontColor=#4D5955;fontFamily=Arial;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1370" y="25" width="180" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Main decision flow. Solid lines are the normal path; dashed lines are human or supervisory intervention. -->
+        <mxCell id="arrow-agents-policy" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2F3432;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="290" as="sourcePoint"/>
+            <mxPoint x="280" y="290" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow-policy-risk" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2F3432;strokeWidth=1;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="450" y="277" as="sourcePoint"/>
+            <mxPoint x="480" y="245" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow-policy-compliance" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2F3432;strokeWidth=1;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="450" y="300" as="sourcePoint"/>
+            <mxPoint x="480" y="340" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow-risk-decision" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2F3432;strokeWidth=1;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="245" as="sourcePoint"/>
+            <mxPoint x="680" y="277" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow-compliance-decision" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2F3432;strokeWidth=1;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="340" as="sourcePoint"/>
+            <mxPoint x="680" y="300" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow-decision-executor" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2F3432;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="890" y="290" as="sourcePoint"/>
+            <mxPoint x="960" y="255" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow-executor-integrity" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2F3432;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1130" y="255" as="sourcePoint"/>
+            <mxPoint x="1170" y="255" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow-integrity-market" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2F3432;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1340" y="255" as="sourcePoint"/>
+            <mxPoint x="1380" y="255" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow-decision-human" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6C7772;strokeWidth=1;dashed=1;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="785" y="235" as="sourcePoint"/>
+            <mxPoint x="1045" y="140" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow-human-executor" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6C7772;strokeWidth=1;dashed=1;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1045" y="140" as="sourcePoint"/>
+            <mxPoint x="1045" y="205" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow-control-audit" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6C7772;strokeWidth=1;dashed=1;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="620" y="470" as="sourcePoint"/>
+            <mxPoint x="620" y="500" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow-supervisor-control" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6C7772;strokeWidth=1;dashed=1;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="980" y="500" as="sourcePoint"/>
+            <mxPoint x="800" y="470" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="agents-frame" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFBF8;strokeColor=#8C9691;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="140" width="180" height="330" as="geometry"/>
+        </mxCell>
+        <mxCell id="control-frame" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F5F1;strokeColor=#5F7767;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="250" y="140" width="680" height="330" as="geometry"/>
+        </mxCell>
+        <mxCell id="human-frame" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFBF8;strokeColor=#8C9691;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="960" y="45" width="170" height="95" as="geometry"/>
+        </mxCell>
+        <mxCell id="executor-frame" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFBF8;strokeColor=#8C9691;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="960" y="205" width="170" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="integrity-frame" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFBF8;strokeColor=#8C9691;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="205" width="170" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="market-frame" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFBF8;strokeColor=#8C9691;strokeWidth=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1380" y="205" width="170" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="audit-frame" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFBF8;strokeColor=#8C9691;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="500" width="700" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="supervisor-frame" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFBF8;strokeColor=#8C9691;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="780" y="500" width="400" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="governance-frame" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F5F1;strokeColor=#5F7767;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="500" width="330" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="value-frame" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFBF8;strokeColor=#8C9691;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="650" width="1510" height="85" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="flow-intention" value="intention" style="text;html=1;align=center;verticalAlign=middle;fontColor=#6C7772;fontFamily=Arial;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="265" width="60" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="flow-risk" value="avis" style="text;html=1;align=center;verticalAlign=middle;fontColor=#6C7772;fontFamily=Arial;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="640" y="225" width="40" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="flow-compliance" value="avis" style="text;html=1;align=center;verticalAlign=middle;fontColor=#6C7772;fontFamily=Arial;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="640" y="320" width="40" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="flow-ordre" value="ordre" style="text;html=1;align=center;verticalAlign=middle;fontColor=#6C7772;fontFamily=Arial;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1125" y="180" width="60" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="flow-conforme" value="ordre conforme" style="text;html=1;align=center;verticalAlign=middle;fontColor=#6C7772;fontFamily=Arial;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1335" y="180" width="110" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="flow-sensitive" value="si sensible" style="text;html=1;align=center;verticalAlign=middle;fontColor=#6C7772;fontFamily=Arial;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="885" y="155" width="90" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="flow-trace" value="trace" style="text;html=1;align=center;verticalAlign=middle;fontColor=#6C7772;fontFamily=Arial;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="590" y="476" width="60" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="flow-supervision" value="observe / arrêt" style="text;html=1;align=center;verticalAlign=middle;fontColor=#6C7772;fontFamily=Arial;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="855" y="476" width="110" height="18" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="agents-title" value="Agents" style="text;html=1;align=left;verticalAlign=middle;fontColor=#2F3432;fontFamily=Arial;fontSize=20;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="65" y="170" width="130" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="agents-body" value="Proposer&lt;br&gt;Analyser et confronter&lt;br&gt;Préparer l'ordre" style="text;html=1;align=left;verticalAlign=top;fontColor=#2F3432;fontFamily=Arial;fontSize=16;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="65" y="220" width="130" height="95" as="geometry"/>
+        </mxCell>
+        <mxCell id="agents-note" value="Une intention,&lt;br&gt;jamais une autorisation" style="text;html=1;align=left;verticalAlign=top;fontColor=#6C7772;fontFamily=Arial;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="65" y="345" width="130" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="agents-boundary" value="Pas d'accès direct&lt;br&gt;au marché" style="text;html=1;align=left;verticalAlign=top;fontColor=#6C7772;fontFamily=Arial;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="65" y="400" width="130" height="34" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="control-title" value="ManAgent — contrôle indépendant" style="text;html=1;align=left;verticalAlign=middle;fontColor=#3F5949;fontFamily=Arial;fontSize=21;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="170" width="380" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="control-subtitle" value="Deux regards avant une seule décision" style="text;html=1;align=left;verticalAlign=middle;fontColor=#6C7772;fontFamily=Arial;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="680" y="170" width="220" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="policy-frame" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFBF8;strokeColor=#8C9691;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="235" width="170" height="85" as="geometry"/>
+        </mxCell>
+        <mxCell id="policy-label" value="Règles &amp; mandat&lt;br&gt;Seuils • actifs • droits" style="text;html=1;align=center;verticalAlign=middle;fontColor=#2F3432;fontFamily=Arial;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="250" width="150" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="risk-frame" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFBF8;strokeColor=#8C9691;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="210" width="170" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="risk-label" value="Juge risque&lt;br&gt;Exposition • budget • arrêt" style="text;html=1;align=center;verticalAlign=middle;fontColor=#2F3432;fontFamily=Arial;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="225" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="compliance-frame" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFBF8;strokeColor=#8C9691;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="300" width="170" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="compliance-label" value="Juge conformité&lt;br&gt;Mandat • contrepartie" style="text;html=1;align=center;verticalAlign=middle;fontColor=#2F3432;fontFamily=Arial;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="315" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="decision-frame" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E4ECE5;strokeColor=#5F7767;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="680" y="235" width="210" height="85" as="geometry"/>
+        </mxCell>
+        <mxCell id="decision-label" value="Décision combinée&lt;br&gt;Risque + conformité&lt;br&gt;&lt;b&gt;Autoriser • humain • bloquer&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;fontColor=#2F3432;fontFamily=Arial;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="690" y="245" width="190" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="control-note" value="Les agents peuvent proposer. Le contrôle seul peut autoriser." style="text;html=1;align=center;verticalAlign=middle;fontColor=#6C7772;fontFamily=Arial;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="280" y="415" width="620" height="22" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="human-label" value="Superviseur humain&lt;br&gt;Approuver • refuser • arrêter" style="text;html=1;align=center;verticalAlign=middle;fontColor=#2F3432;fontFamily=Arial;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="970" y="60" width="150" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="executor-label" value="Exécuteur&lt;br&gt;Applique, ne décide pas" style="text;html=1;align=center;verticalAlign=middle;fontColor=#2F3432;fontFamily=Arial;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="970" y="225" width="150" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="integrity-label" value="Intégrité de l'ordre&lt;br&gt;Ordre = autorisation ?" style="text;html=1;align=center;verticalAlign=middle;fontColor=#2F3432;fontFamily=Arial;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="225" width="150" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="market-label" value="Marché / paiement&lt;br&gt;(simulé)" style="text;html=1;align=center;verticalAlign=middle;fontColor=#2F3432;fontFamily=Arial;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="225" width="150" height="55" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="audit-title" value="Journal d'audit" style="text;html=1;align=left;verticalAlign=middle;fontColor=#2F3432;fontFamily=Arial;fontSize=19;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="525" width="250" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="audit-body" value="Qui • quoi • quand • pourquoi • statut&lt;br&gt;Une trace lisible de chaque décision et de chaque étape." style="text;html=1;align=left;verticalAlign=top;fontColor=#6C7772;fontFamily=Arial;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="70" y="565" width="600" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="supervisor-title" value="Superviseur système" style="text;html=1;align=left;verticalAlign=middle;fontColor=#2F3432;fontFamily=Arial;fontSize=19;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="525" width="280" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="supervisor-body" value="Observe, peut arrêter ou mettre en quarantaine.&lt;br&gt;N'exécute pas et ne vote pas." style="text;html=1;align=left;verticalAlign=top;fontColor=#6C7772;fontFamily=Arial;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="810" y="565" width="340" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="governance-title" value="Une seule porte vers l'action" style="text;html=1;align=left;verticalAlign=middle;fontColor=#3F5949;fontFamily=Arial;fontSize=17;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1245" y="525" width="280" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="governance-body" value="Les agents proposent.&lt;br&gt;Le contrôle autorise." style="text;html=1;align=left;verticalAlign=top;fontColor=#6C7772;fontFamily=Arial;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="1245" y="565" width="250" height="42" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="value-title" value="Ce que le métier gagne" style="text;html=1;align=left;verticalAlign=middle;fontColor=#2F3432;fontFamily=Arial;fontSize=19;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="675" width="270" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="value-body" value="Autonomie maîtrisée  —  humain au bon moment  —  confiance et auditabilité" style="text;html=1;align=left;verticalAlign=middle;fontColor=#6C7772;fontFamily=Arial;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="360" y="675" width="1120" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="footer" value="Trait plein = chemin de décision  •  Pointillé = intervention humaine ou supervision  |  Version jury 1.2 — 23 octobre 2026" style="text;html=1;align=left;verticalAlign=middle;fontColor=#6C7772;fontFamily=Arial;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="40" y="755" width="1510" height="24" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,184 @@
+<mxfile host="65bd71144e">
+    <diagram id="jury-governance" name="Vue jury - gouvernance">
+        <mxGraphModel dx="1830" dy="1230" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontColor=#2F3E3B;fontFamily=Georgia;fontSize=30;fontStyle=1;" value="ManAgent - une autonomie qui reste sous contrôle" vertex="1">
+                    <mxGeometry height="48" width="1140" x="50" y="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="subtitle" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontColor=#69736E;fontFamily=Arial;fontSize=19;" value="Les agents proposent. Les règles cadrent. L&#39;humain décide. Chaque étape laisse une trace." vertex="1">
+                    <mxGeometry height="34" width="1140" x="50" y="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-risk-agents" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#A56B4F;strokeWidth=2;endArrow=block;endFill=1;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="200" y="395" as="sourcePoint"/>
+                        <mxPoint x="200" y="425" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow-agents-guard" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#617B70;strokeWidth=2;endArrow=block;endFill=1;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="350" y="540" as="sourcePoint"/>
+                        <mxPoint x="400" y="540" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow-guard-human" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9B7065;strokeWidth=2;dashed=1;endArrow=block;endFill=1;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1160" y="270" as="sourcePoint"/>
+                        <mxPoint x="1230" y="270" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow-guard-action" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#607A65;strokeWidth=2;endArrow=block;endFill=1;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1160" y="500" as="sourcePoint"/>
+                        <mxPoint x="1230" y="500" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow-human-action" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9B7065;strokeWidth=2;dashed=1;endArrow=block;endFill=1;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1385" y="380" as="sourcePoint"/>
+                        <mxPoint x="1385" y="410" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow-guard-proof" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64716E;strokeWidth=2;dashed=1;endArrow=block;endFill=1;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1160" y="650" as="sourcePoint"/>
+                        <mxPoint x="1230" y="630" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow-action-proof" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64716E;strokeWidth=2;dashed=1;endArrow=block;endFill=1;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1385" y="600" as="sourcePoint"/>
+                        <mxPoint x="1385" y="630" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="risk-frame" parent="1" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#F5EEE4;strokeColor=#B9825E;strokeWidth=2;" value="" vertex="1">
+                    <mxGeometry height="240" width="300" x="50" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="agents-frame" parent="1" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#EEF1F0;strokeColor=#8FA0A4;strokeWidth=2;" value="" vertex="1">
+                    <mxGeometry height="275" width="300" x="50" y="425" as="geometry"/>
+                </mxCell>
+                <mxCell id="guard-frame" parent="1" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#F1F5F0;strokeColor=#69806D;strokeWidth=2;" value="" vertex="1">
+                    <mxGeometry height="535" width="760" x="400" y="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="human-frame" parent="1" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#F4EAE6;strokeColor=#AB786A;strokeWidth=2;" value="" vertex="1">
+                    <mxGeometry height="230" width="310" x="1230" y="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="action-frame" parent="1" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#EDF2ED;strokeColor=#718B77;strokeWidth=2;" value="" vertex="1">
+                    <mxGeometry height="190" width="310" x="1230" y="410" as="geometry"/>
+                </mxCell>
+                <mxCell id="proof-frame" parent="1" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#485755;strokeColor=#485755;strokeWidth=2;" value="" vertex="1">
+                    <mxGeometry height="120" width="310" x="1230" y="630" as="geometry"/>
+                </mxCell>
+                <mxCell id="value-frame" parent="1" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#F4F1EB;strokeColor=#C8C1B7;strokeWidth=2;" value="" vertex="1">
+                    <mxGeometry height="155" width="1490" x="50" y="790" as="geometry"/>
+                </mxCell>
+                <mxCell id="risk-title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontColor=#7A4B34;fontFamily=Arial;fontSize=21;fontStyle=1;" value="Le risque" vertex="1">
+                    <mxGeometry height="34" width="240" x="80" y="185" as="geometry"/>
+                </mxCell>
+                <mxCell id="risk-body" parent="1" style="text;html=1;align=left;verticalAlign=top;fontColor=#554239;fontFamily=Arial;fontSize=17;spacingTop=4;" value="Des agents peuvent...&lt;br&gt;- dépasser leur mandat&lt;br&gt;- se contredire ou être manipulés&lt;br&gt;- modifier un ordre approuvé" vertex="1">
+                    <mxGeometry height="100" width="240" x="80" y="225" as="geometry"/>
+                </mxCell>
+                <mxCell id="risk-label" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EFE0D1;strokeColor=#B9825E;strokeWidth=1;fontColor=#7A4B34;fontFamily=Arial;fontSize=15;fontStyle=1;align=center;verticalAlign=middle;" value="Le vrai risque :&lt;br&gt;une IA sans contrôle." vertex="1">
+                    <mxGeometry height="38" width="240" x="80" y="335" as="geometry"/>
+                </mxCell>
+                <mxCell id="agents-title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontColor=#405A63;fontFamily=Arial;fontSize=21;fontStyle=1;" value="Les agents" vertex="1">
+                    <mxGeometry height="34" width="240" x="80" y="455" as="geometry"/>
+                </mxCell>
+                <mxCell id="agent-propose" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFAF6;strokeColor=#AAB8B9;strokeWidth=1;fontColor=#2F3E3B;fontFamily=Arial;fontSize=16;fontStyle=1;align=center;verticalAlign=middle;" value="Proposer" vertex="1">
+                    <mxGeometry height="32" width="240" x="80" y="500" as="geometry"/>
+                </mxCell>
+                <mxCell id="agent-analyse" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFAF6;strokeColor=#AAB8B9;strokeWidth=1;fontColor=#2F3E3B;fontFamily=Arial;fontSize=16;fontStyle=1;align=center;verticalAlign=middle;" value="Analyser et confronter" vertex="1">
+                    <mxGeometry height="32" width="240" x="80" y="542" as="geometry"/>
+                </mxCell>
+                <mxCell id="agent-prepare" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFAF6;strokeColor=#AAB8B9;strokeWidth=1;fontColor=#2F3E3B;fontFamily=Arial;fontSize=16;fontStyle=1;align=center;verticalAlign=middle;" value="Préparer l&#39;ordre" vertex="1">
+                    <mxGeometry height="32" width="240" x="80" y="584" as="geometry"/>
+                </mxCell>
+                <mxCell id="agents-note" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontColor=#526A73;fontFamily=Arial;fontSize=14;fontStyle=1;" value="Pas d&#39;accès direct au marché" vertex="1">
+                    <mxGeometry height="22" width="240" x="80" y="625" as="geometry"/>
+                </mxCell>
+                <mxCell id="guard-title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontColor=#3E5D47;fontFamily=Arial;fontSize=24;fontStyle=1;" value="ManAgent, le garde-fou indépendant" vertex="1">
+                    <mxGeometry height="38" width="680" x="440" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="guard-subtitle" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontColor=#5A7160;fontFamily=Arial;fontSize=17;" value="Une seule barrière entre les propositions et l&#39;action financière" vertex="1">
+                    <mxGeometry height="28" width="680" x="440" y="208" as="geometry"/>
+                </mxCell>
+                <mxCell id="guard-check" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFAF6;strokeColor=#A3B3A4;strokeWidth=1;fontColor=#3E5D47;fontFamily=Arial;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;" value="1. Vérifier le mandat&lt;br&gt;Montant • actif • contrepartie" vertex="1">
+                    <mxGeometry height="90" width="330" x="440" y="270" as="geometry"/>
+                </mxCell>
+                <mxCell id="guard-block" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFAF6;strokeColor=#A3B3A4;strokeWidth=1;fontColor=#3E5D47;fontFamily=Arial;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;" value="2. Bloquer la dérive&lt;br&gt;Règles • intégrité • arrêt" vertex="1">
+                    <mxGeometry height="90" width="330" x="790" y="270" as="geometry"/>
+                </mxCell>
+                <mxCell id="guard-human" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFAF6;strokeColor=#A3B3A4;strokeWidth=1;fontColor=#3E5D47;fontFamily=Arial;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;" value="3. Faire intervenir l&#39;humain&lt;br&gt;Cas sensible = validation signée" vertex="1">
+                    <mxGeometry height="100" width="330" x="440" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="guard-proof" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFAF6;strokeColor=#A3B3A4;strokeWidth=1;fontColor=#3E5D47;fontFamily=Arial;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;" value="4. Prouver la décision&lt;br&gt;Trace complète et vérifiable" vertex="1">
+                    <mxGeometry height="100" width="330" x="790" y="385" as="geometry"/>
+                </mxCell>
+                <mxCell id="outcome-allow" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E5EFE7;strokeColor=#78967E;strokeWidth=1;fontColor=#3F6648;fontFamily=Arial;fontSize=15;fontStyle=1;align=center;verticalAlign=middle;" value="AUTORISER" vertex="1">
+                    <mxGeometry height="34" width="200" x="440" y="505" as="geometry"/>
+                </mxCell>
+                <mxCell id="outcome-escalate" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F2EBDD;strokeColor=#B3986D;strokeWidth=1;fontColor=#7D6541;fontFamily=Arial;fontSize=15;fontStyle=1;align=center;verticalAlign=middle;" value="DEMANDER À L&#39;HUMAIN" vertex="1">
+                    <mxGeometry height="34" width="250" x="660" y="505" as="geometry"/>
+                </mxCell>
+                <mxCell id="outcome-block" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F0E3DF;strokeColor=#AD7C6F;strokeWidth=1;fontColor=#794F49;fontFamily=Arial;fontSize=15;fontStyle=1;align=center;verticalAlign=middle;" value="BLOQUER" vertex="1">
+                    <mxGeometry height="34" width="190" x="930" y="505" as="geometry"/>
+                </mxCell>
+                <mxCell id="guard-gate" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DDE9DF;strokeColor=#66816D;strokeWidth=2;fontColor=#3E5D47;fontFamily=Arial;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;" value="Une seule porte vers l&#39;action" vertex="1">
+                    <mxGeometry height="44" width="680" x="440" y="555" as="geometry"/>
+                </mxCell>
+                <mxCell id="guard-note" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontColor=#56705D;fontFamily=Arial;fontSize=15;" value="Les agents peuvent proposer. Seul le contrôle peut autoriser." vertex="1">
+                    <mxGeometry height="28" width="680" x="440" y="615" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow-label-1" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontColor=#617B70;fontFamily=Arial;fontSize=14;fontStyle=1;" value="propose" vertex="1">
+                    <mxGeometry height="24" width="90" x="285" y="480" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow-label-2" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontColor=#9B7065;fontFamily=Arial;fontSize=14;fontStyle=1;" value="si sensible" vertex="1">
+                    <mxGeometry height="24" width="130" x="1080" y="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow-label-3" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontColor=#607A65;fontFamily=Arial;fontSize=14;fontStyle=1;" value="si autorisé" vertex="1">
+                    <mxGeometry height="24" width="140" x="1080" y="470" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow-label-4" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontColor=#9B7065;fontFamily=Arial;fontSize=14;fontStyle=1;" value="approuve ou refuse" vertex="1">
+                    <mxGeometry height="20" width="130" x="1400" y="383" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow-label-5" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontColor=#64716E;fontFamily=Arial;fontSize=14;fontStyle=1;" value="preuve" vertex="1">
+                    <mxGeometry height="24" width="80" x="1080" y="620" as="geometry"/>
+                </mxCell>
+                <mxCell id="human-title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontColor=#8B5E55;fontFamily=Arial;fontSize=21;fontStyle=1;" value="L&#39;humain garde la main" vertex="1">
+                    <mxGeometry height="34" width="250" x="1260" y="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="human-body" parent="1" style="text;html=1;align=left;verticalAlign=top;fontColor=#6F4B45;fontFamily=Arial;fontSize=15;" value="Quand le montant, le risque&lt;br&gt;ou le doute l&#39;exige :&lt;br&gt;&lt;br&gt;APPROUVER • REFUSER&lt;br&gt;ou ARRÊTER&lt;br&gt;&lt;br&gt;Exemple : 85 000 € → humain" vertex="1">
+                    <mxGeometry height="120" width="250" x="1260" y="225" as="geometry"/>
+                </mxCell>
+                <mxCell id="action-title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontColor=#4F6B54;fontFamily=Arial;fontSize=21;fontStyle=1;" value="Action financière" vertex="1">
+                    <mxGeometry height="34" width="250" x="1260" y="440" as="geometry"/>
+                </mxCell>
+                <mxCell id="action-body" parent="1" style="text;html=1;align=left;verticalAlign=top;fontColor=#48634E;fontFamily=Arial;fontSize=15;" value="Exécution autorisée&lt;br&gt;ou blocage explicite&lt;br&gt;&lt;br&gt;Exemple : 4 000 € → automatique" vertex="1">
+                    <mxGeometry height="80" width="250" x="1260" y="480" as="geometry"/>
+                </mxCell>
+                <mxCell id="proof-title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontColor=#F8F4EC;fontFamily=Arial;fontSize=17;fontStyle=1;" value="La preuve&lt;br&gt;à tout moment" vertex="1">
+                    <mxGeometry height="35" width="250" x="1260" y="660" as="geometry"/>
+                </mxCell>
+                <mxCell id="proof-body" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontColor=#E7ECE7;fontFamily=Arial;fontSize=15;" value="Qui • quoi • quand • pourquoi • statut" vertex="1">
+                    <mxGeometry height="18" width="250" x="1260" y="702" as="geometry"/>
+                </mxCell>
+                <mxCell id="value-title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontColor=#394945;fontFamily=Arial;fontSize=20;fontStyle=1;" value="Ce que le métier gagne" vertex="1">
+                    <mxGeometry height="30" width="400" x="80" y="820" as="geometry"/>
+                </mxCell>
+                <mxCell id="value-autonomy" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFAF6;strokeColor=#D0C9BE;strokeWidth=1;fontColor=#394945;fontFamily=Arial;fontSize=16;fontStyle=1;align=center;verticalAlign=middle;" value="Autonomie maîtrisée&lt;br&gt;Les cas simples avancent sans friction" vertex="1">
+                    <mxGeometry height="52" width="420" x="80" y="860" as="geometry"/>
+                </mxCell>
+                <mxCell id="value-human" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFAF6;strokeColor=#D0C9BE;strokeWidth=1;fontColor=#394945;fontFamily=Arial;fontSize=16;fontStyle=1;align=center;verticalAlign=middle;" value="Humain au bon moment&lt;br&gt;Les exceptions déclenchent une décision" vertex="1">
+                    <mxGeometry height="52" width="450" x="560" y="860" as="geometry"/>
+                </mxCell>
+                <mxCell id="value-proof" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCFAF6;strokeColor=#D0C9BE;strokeWidth=1;fontColor=#394945;fontFamily=Arial;fontSize=16;fontStyle=1;align=center;verticalAlign=middle;" value="Confiance et auditabilité&lt;br&gt;Chaque étape est rejouable et vérifiable" vertex="1">
+                    <mxGeometry height="52" width="410" x="1070" y="860" as="geometry"/>
+                </mxCell>
+                <mxCell id="footer" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontColor=#6E7772;fontFamily=Arial;fontSize=13;" value="Repères : propositions  •  contrôle  •  décision humaine  •  preuve  |  Version jury 1.1 — 23 octobre 2026" vertex="1">
+                    <mxGeometry height="24" width="1490" x="50" y="960" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
