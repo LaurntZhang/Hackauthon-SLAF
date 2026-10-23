@@ -1,1 +1,79 @@
+# Local tooling
 /.kiro
+
+# Python bytecode and local environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+
+# Python test, type-checking, and lint caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+coverage/
+htmlcov/
+
+# Build outputs and installed packages
+build/
+dist/
+*.egg-info/
+
+# JavaScript dependencies and build output
+node_modules/
+.expo/
+.expo-prebuild/
+.expo-prebuild-android/
+web-build/
+expo-env.d.ts
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.metro-health-check*
+*.tsbuildinfo
+
+# Native React Native build artifacts (keep source projects tracked)
+/android/.gradle/
+/android/app/build/
+/android/local.properties
+/android/.kotlin/
+/ios/Pods/
+/ios/build/
+/ios/DerivedData/
+**/ios/.xcode.env.local
+*.apk
+*.aab
+
+# Local signing credentials
+*.jks
+*.keystore
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+
+# Local secrets and environment overrides
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Generated runtime data
+/logs/
+checkpoints.sqlite*
+*.log
+
+# Temporary and operating-system files
+*.tmp
+*.bak
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
