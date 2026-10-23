@@ -1,0 +1,14 @@
+{
+  "name": "Security Quick Audit",
+  "id": "security-quick-audit",
+  "description": "Perform a focused technical security audit before the Finaxys demo.",
+  "platforms": ["GitHub Copilot (VS Code)", "Python", "FastAPI"],
+  "model": "Claude Sonnet 4.6 (copilot)",
+  "tools": ["codebase", "search", "problems"],
+  "tags": ["security", "secrets", "injection", "ssrf", "dependencies", "logging"],
+  "files": ["AGENT.md", "SKILL.md", "README.md", "metadata.json"],
+  "language": "fr",
+  "version": "1.0.0",
+  "createdAt": "2026-10-23",
+  "updatedAt": "2026-10-23"
+}

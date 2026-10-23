@@ -1,0 +1,12 @@
+{
+  "name": "Copilot Studio Harness Picker",
+  "id": "copilot-studio-harness-picker",
+  "description": "Evidence-led selection of a Copilot Studio harness and solution shape with hard-gate, governance, ALM, and credit-planning analysis.",
+  "platforms": ["Microsoft Copilot Studio", "GitHub Copilot", "Microsoft 365 Copilot"],
+  "tags": ["copilot-studio", "harness", "architecture", "workflow", "governance", "licensing"],
+  "language": "en",
+  "version": "1.0.0",
+  "source": "https://microsoft.github.io/cat-agent-skills/skills/copilot-studio-harness-picker/",
+  "createdAt": "2026-10-23",
+  "updatedAt": "2026-10-23"
+}

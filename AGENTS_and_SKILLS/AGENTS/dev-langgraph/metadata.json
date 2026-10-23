@@ -1,0 +1,36 @@
+{
+  "name": "Dev Langgraph",
+  "id": "dev-langgraph",
+  "description": "Génère du code d'orchestration multi-agents LangGraph/CrewAI — state graphs, nodes, edges conditionnels, tool-calling",
+  "platforms": [
+    "GitHub Copilot (VS Code)"
+  ],
+  "model": [
+    "Codestral (copilot)",
+    "Claude Sonnet 4.6 (copilot)"
+  ],
+  "tools": [
+    "codebase",
+    "editFiles",
+    "runCommands"
+  ],
+  "tags": [
+    "langgraph",
+    "crewai",
+    "state-graph",
+    "interrupt",
+    "hitl",
+    "pydantic"
+  ],
+  "files": [
+    "AGENT.md",
+    "SKILL.md",
+    "README.md",
+    "scripts/governed_graph_template.py"
+  ],
+  "project": "Hackathon Finaxys 2026 - Gouvernance multi-agents & Finance autonome",
+  "language": "fr",
+  "version": "1.0.0",
+  "createdAt": "2026-10-23",
+  "updatedAt": "2026-10-23"
+}

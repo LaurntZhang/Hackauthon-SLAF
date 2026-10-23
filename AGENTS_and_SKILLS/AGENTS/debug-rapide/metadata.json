@@ -1,0 +1,36 @@
+{
+  "name": "Debug Rapide",
+  "id": "debug-rapide",
+  "description": "Relit un bout de code en erreur et propose un fix minimal, sans réécrire tout le fichier — pensé pour la pression du temps en hackathon",
+  "platforms": [
+    "GitHub Copilot (VS Code)"
+  ],
+  "model": [
+    "Codestral (copilot)",
+    "Claude Sonnet 4.6 (copilot)"
+  ],
+  "tools": [
+    "codebase",
+    "editFiles",
+    "runCommands",
+    "runTests"
+  ],
+  "tags": [
+    "debugging",
+    "hotfix",
+    "traceback",
+    "minimal-diff",
+    "hackathon"
+  ],
+  "files": [
+    "AGENT.md",
+    "SKILL.md",
+    "README.md",
+    "scripts/triage_traceback.py"
+  ],
+  "project": "Hackathon Finaxys 2026 - Gouvernance multi-agents & Finance autonome",
+  "language": "fr",
+  "version": "1.0.0",
+  "createdAt": "2026-10-23",
+  "updatedAt": "2026-10-23"
+}

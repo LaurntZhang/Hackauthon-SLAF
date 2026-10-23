@@ -1,0 +1,14 @@
+{
+  "name": "LangGraph",
+  "id": "langgraph",
+  "description": "Build durable, typed LangGraph workflows with explicit routing, persistence, CLI deployment, and human approval.",
+  "platforms": ["LangGraph", "Python"],
+  "tags": ["langgraph", "stategraph", "checkpointing", "persistence", "hitl", "cli"],
+  "language": "en",
+  "version": "1.0.0",
+  "sources": [
+    "https://claudemarketplaces.com/skills/langchain-ai/langchain-skills/langgraph-fundamentals",
+    "https://claudemarketplaces.com/skills/langchain-ai/langchain-skills/langgraph-persistence",
+    "https://claudemarketplaces.com/skills/langchain-ai/langchain-skills/langgraph-cli"
+  ]
+}

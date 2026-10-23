@@ -1,0 +1,14 @@
+{
+  "name": "Git Hackathon",
+  "id": "git-hackathon",
+  "description": "Protect work and maintain a clear, safe Git workflow during the Finaxys hackathon.",
+  "platforms": ["GitHub Copilot (VS Code)", "Git"],
+  "model": "Codestral (copilot)",
+  "tools": ["runCommands", "codebase"],
+  "tags": ["git", "commits", "branches", "merge-conflicts", "demo-stable"],
+  "files": ["AGENT.md", "SKILL.md", "README.md", "metadata.json"],
+  "language": "fr",
+  "version": "1.0.0",
+  "createdAt": "2026-10-23",
+  "updatedAt": "2026-10-23"
+}

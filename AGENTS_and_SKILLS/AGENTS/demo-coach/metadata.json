@@ -1,0 +1,32 @@
+{
+  "name": "Demo Coach",
+  "id": "demo-coach",
+  "description": "Aide à construire le script de démo et le pitch — structure narrative, mise en avant de la valeur ajoutée, anticipation des questions du jury",
+  "platforms": [
+    "GitHub Copilot (VS Code)"
+  ],
+  "model": "Claude Sonnet 4.6 (copilot)",
+  "tools": [
+    "codebase",
+    "search"
+  ],
+  "tags": [
+    "pitch",
+    "demo",
+    "storytelling",
+    "jury",
+    "regulatory-vocabulary"
+  ],
+  "files": [
+    "AGENT.md",
+    "SKILL.md",
+    "README.md",
+    "scripts/pitch_timer.py",
+    "assets/demo_script_template.md"
+  ],
+  "project": "Hackathon Finaxys 2026 - Gouvernance multi-agents & Finance autonome",
+  "language": "fr",
+  "version": "1.0.0",
+  "createdAt": "2026-10-23",
+  "updatedAt": "2026-10-23"
+}

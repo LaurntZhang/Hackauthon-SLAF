@@ -1,0 +1,14 @@
+{
+  "name": "Dev Backend FastAPI",
+  "id": "dev-backend-fastapi",
+  "description": "Design and validate a reliable FastAPI API boundary for the Finaxys multi-agent demo.",
+  "platforms": ["GitHub Copilot (VS Code)", "FastAPI", "Pydantic"],
+  "model": ["Codestral (copilot)", "Claude Sonnet 4.6 (copilot)"],
+  "tools": ["codebase", "editFiles", "runCommands", "runTests"],
+  "tags": ["fastapi", "rest", "pydantic", "async", "openapi", "api-security"],
+  "files": ["AGENT.md", "SKILL.md", "README.md", "metadata.json"],
+  "language": "fr",
+  "version": "1.0.0",
+  "createdAt": "2026-10-23",
+  "updatedAt": "2026-10-23"
+}

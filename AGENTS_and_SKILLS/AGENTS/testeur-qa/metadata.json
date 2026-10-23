@@ -1,0 +1,35 @@
+{
+  "name": "Testeur Qa",
+  "id": "testeur-qa",
+  "description": "Génère des tests pytest et imagine des cas limites spécifiques aux systèmes multi-agents (boucles, décisions contradictoires, dépassement de scope)",
+  "platforms": [
+    "GitHub Copilot (VS Code)"
+  ],
+  "model": "Claude Sonnet 4.6 (copilot)",
+  "tools": [
+    "codebase",
+    "editFiles",
+    "runCommands",
+    "runTests"
+  ],
+  "tags": [
+    "pytest",
+    "qa",
+    "edge-cases",
+    "multi-agents",
+    "hitl",
+    "governance-tests"
+  ],
+  "files": [
+    "AGENT.md",
+    "SKILL.md",
+    "README.md",
+    "templates/conftest.py",
+    "templates/test_multiagent_risks.py"
+  ],
+  "project": "Hackathon Finaxys 2026 - Gouvernance multi-agents & Finance autonome",
+  "language": "fr",
+  "version": "1.0.0",
+  "createdAt": "2026-10-23",
+  "updatedAt": "2026-10-23"
+}

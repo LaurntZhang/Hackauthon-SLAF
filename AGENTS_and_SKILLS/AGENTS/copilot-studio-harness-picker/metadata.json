@@ -1,0 +1,14 @@
+{
+  "name": "Copilot Studio Harness Picker",
+  "id": "copilot-studio-harness-picker",
+  "description": "Choose a Copilot Studio harness and solution shape using hard constraints, governance, ALM, and transparent planning estimates.",
+  "platforms": ["GitHub Copilot (VS Code)", "Microsoft Copilot Studio"],
+  "model": "Claude Sonnet 4.6 (copilot)",
+  "tools": ["codebase", "search", "web"],
+  "tags": ["copilot-studio", "harness", "architecture", "workflow", "governance", "credits"],
+  "files": ["AGENT.md", "SKILL.md", "README.md", "metadata.json"],
+  "language": "fr",
+  "version": "1.0.0",
+  "createdAt": "2026-10-23",
+  "updatedAt": "2026-10-23"
+}

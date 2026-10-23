@@ -1,0 +1,14 @@
+{
+  "name": "LangChain",
+  "id": "langchain",
+  "description": "Build bounded LangChain agents with typed tools, middleware, structured output, and grounded RAG.",
+  "platforms": ["LangChain", "Python"],
+  "tags": ["langchain", "agents", "tools", "middleware", "rag", "structured-output"],
+  "language": "en",
+  "version": "1.0.0",
+  "sources": [
+    "https://claudemarketplaces.com/skills/langchain-ai/langchain-skills/langchain-fundamentals",
+    "https://claudemarketplaces.com/skills/langchain-ai/langchain-skills/langchain-middleware",
+    "https://claudemarketplaces.com/skills/langchain-ai/langchain-skills/langchain-rag"
+  ]
+}

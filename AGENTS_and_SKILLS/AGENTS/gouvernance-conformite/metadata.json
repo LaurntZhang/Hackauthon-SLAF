@@ -1,0 +1,34 @@
+{
+  "name": "Gouvernance Conformite",
+  "id": "gouvernance-conformite",
+  "description": "Relit le code/design d'un système multi-agents et vérifie le respect des principes de gouvernance bancaire ; suggère le vocabulaire réglementaire pour le pitch",
+  "platforms": [
+    "GitHub Copilot (VS Code)"
+  ],
+  "model": "claude-sonnet-5-5",
+  "fallback_model": "mistral-large-latest",
+  "tools": [
+    "codebase",
+    "search"
+  ],
+  "tags": [
+    "governance",
+    "compliance",
+    "dora",
+    "ai-act",
+    "audit-trail",
+    "four-eyes",
+    "xai"
+  ],
+  "files": [
+    "AGENT.md",
+    "SKILL.md",
+    "README.md",
+    "scripts/governance_audit.py"
+  ],
+  "project": "Hackathon Finaxys 2026 - Gouvernance multi-agents & Finance autonome",
+  "language": "fr",
+  "version": "1.0.0",
+  "createdAt": "2026-10-23",
+  "updatedAt": "2026-10-23"
+}

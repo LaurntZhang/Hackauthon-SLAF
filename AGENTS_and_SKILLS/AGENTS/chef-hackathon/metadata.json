@@ -1,0 +1,14 @@
+{
+  "name": "Chef Hackathon",
+  "id": "chef-hackathon",
+  "description": "Prioritize scope, dependencies, cut decisions, and demo freeze for the Finaxys hackathon.",
+  "platforms": ["GitHub Copilot (VS Code)", "Hackathon delivery"],
+  "model": "Claude Sonnet 4.6 (copilot)",
+  "tools": ["codebase", "search"],
+  "tags": ["scope", "prioritization", "timeboxing", "mvp", "demo-freeze"],
+  "files": ["AGENT.md", "SKILL.md", "README.md", "metadata.json"],
+  "language": "fr",
+  "version": "1.0.0",
+  "createdAt": "2026-10-23",
+  "updatedAt": "2026-10-23"
+}

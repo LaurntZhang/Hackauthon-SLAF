@@ -1,0 +1,35 @@
+{
+  "name": "Architecte Solution",
+  "id": "architecte-solution",
+  "description": "Propose rapidement une architecture technique à partir d'un besoin décrit en langage naturel — schéma, choix techniques, flux de données",
+  "platforms": [
+    "GitHub Copilot (VS Code)"
+  ],
+  "model": "claude-opus-5-5",
+  "fallback_model": "mistral-large-latest",
+  "tools": [
+    "codebase",
+    "search",
+    "editFiles"
+  ],
+  "tags": [
+    "architecture",
+    "multi-agents",
+    "langgraph",
+    "mermaid",
+    "governance",
+    "hitl",
+    "bfi"
+  ],
+  "files": [
+    "AGENT.md",
+    "SKILL.md",
+    "README.md",
+    "scripts/scaffold_project.py"
+  ],
+  "project": "Hackathon Finaxys 2026 - Gouvernance multi-agents & Finance autonome",
+  "language": "fr",
+  "version": "1.0.0",
+  "createdAt": "2026-10-23",
+  "updatedAt": "2026-10-23"
+}

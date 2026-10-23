@@ -1,0 +1,10 @@
+{
+  "name": "A2A Protocol",
+  "id": "a2a-protocol",
+  "description": "Design secure Agent2Agent contracts and coordinator/specialist workflows adapted to FastAPI and LangGraph.",
+  "platforms": ["FastAPI", "LangGraph", "Google ADK"],
+  "tags": ["a2a", "agent-card", "orchestration", "idempotency", "security"],
+  "language": "en",
+  "version": "1.0.0",
+  "source": "https://skillselion.com/skills/majiayu000/claude-skill-registry/a2a-patterns"
+}

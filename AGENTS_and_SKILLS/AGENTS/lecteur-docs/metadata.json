@@ -1,0 +1,40 @@
+{
+  "name": "Lecteur Documentation",
+  "id": "lecteur-docs",
+  "description": "Répondre à partir de cheat sheets locales pour éviter les recherches web et préserver le quota de modèles.",
+  "platforms": [
+    "GitHub Copilot (VS Code)",
+    "LangGraph",
+    "Pydantic",
+    "CrewAI",
+    "FastAPI",
+    "Langfuse"
+  ],
+  "model": "Codestral (copilot)",
+  "fallback_model": "mistral-large-latest",
+  "tools": [
+    "codebase",
+    "search",
+    "web"
+  ],
+  "tags": [
+    "documentation",
+    "offline-first",
+    "cheat-sheets",
+    "langgraph",
+    "pydantic",
+    "fastapi",
+    "x402",
+    "langfuse"
+  ],
+  "files": [
+    "AGENT.md",
+    "SKILL.md",
+    "README.md",
+    "metadata.json"
+  ],
+  "language": "fr",
+  "version": "1.0.0",
+  "createdAt": "2026-10-23",
+  "updatedAt": "2026-10-23"
+}

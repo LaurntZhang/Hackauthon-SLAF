@@ -1,0 +1,15 @@
+{
+  "name": "Explicabilite Decisions",
+  "id": "explicabilite-decisions",
+  "description": "Generate native, factual, human-readable explanations and decision cards for governed multi-agent decisions.",
+  "platforms": ["GitHub Copilot (VS Code)", "LangGraph", "Pydantic"],
+  "model": "claude-sonnet-5-5",
+  "fallback_model": "mistral-large-latest",
+  "tools": ["codebase", "editFiles"],
+  "tags": ["xai", "explainability", "decision-record", "audit", "governance"],
+  "files": ["AGENT.md", "SKILL.md", "README.md", "metadata.json"],
+  "language": "fr",
+  "version": "1.0.0",
+  "createdAt": "2026-10-23",
+  "updatedAt": "2026-10-23"
+}

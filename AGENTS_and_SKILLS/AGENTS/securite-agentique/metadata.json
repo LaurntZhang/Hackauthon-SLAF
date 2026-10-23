@@ -1,0 +1,15 @@
+{
+  "name": "Securite Agentique",
+  "id": "securite-agentique",
+  "description": "Audit LLM multi-agent security risks and tool boundaries before the Finaxys demo.",
+  "platforms": ["GitHub Copilot (VS Code)", "LangGraph", "LLM agents"],
+  "model": "claude-opus-5-5",
+  "fallback_model": "mistral-large-latest",
+  "tools": ["codebase", "search"],
+  "tags": ["agentic-security", "prompt-injection", "excessive-agency", "goal-hijacking", "data-leakage"],
+  "files": ["AGENT.md", "SKILL.md", "README.md", "metadata.json"],
+  "language": "fr",
+  "version": "1.0.0",
+  "createdAt": "2026-10-23",
+  "updatedAt": "2026-10-23"
+}

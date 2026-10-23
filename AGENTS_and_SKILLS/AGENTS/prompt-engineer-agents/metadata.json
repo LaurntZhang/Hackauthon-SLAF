@@ -1,0 +1,15 @@
+{
+  "name": "Prompt Engineer Agents",
+  "id": "prompt-engineer-agents",
+  "description": "Improve internal multi-agent system prompts for reliable, typed, mandate-aware decisions.",
+  "platforms": ["GitHub Copilot (VS Code)", "LangGraph", "CrewAI"],
+  "model": "claude-sonnet-5-5",
+  "fallback_model": "mistral-large-latest",
+  "tools": ["codebase", "editFiles"],
+  "tags": ["prompt-engineering", "structured-output", "grounding", "uncertainty", "evals"],
+  "files": ["AGENT.md", "SKILL.md", "README.md", "metadata.json"],
+  "language": "fr",
+  "version": "1.0.0",
+  "createdAt": "2026-10-23",
+  "updatedAt": "2026-10-23"
+}
