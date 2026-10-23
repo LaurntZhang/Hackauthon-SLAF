@@ -33,6 +33,7 @@ Copilot correspondants se trouvent dans [`.github/agents/`](../.github/agents/).
 | [security-quick-audit](./security-quick-audit/) | Auditeur sécurité applicative | Chercher secrets, injections, SSRF et fuites de logs |
 | [testeur-qa](./testeur-qa/) | QA des graphes multi-agents | Tester chemins nominaux, limites, boucles et reprises |
 | [lecteur-docs](./lecteur-docs/) | Lecteur de documentation offline-first | Répondre depuis les cheat sheets locales avant le web |
+| [ui-ux-pro-max](./ui-ux-pro-max/) | Concepteur UI/UX | Concevoir interfaces, design systems, interactions et audits d'accessibilité |
 
 ## Fiches d'utilisation
 

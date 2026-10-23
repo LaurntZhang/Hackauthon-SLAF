@@ -53,6 +53,7 @@ Ce catalogue résume le rôle et les cas d'usage des skills présents dans
 | [quickstart-x402](./quickstart-x402/) | Démarrage rapide x402 | Monter un prototype de paiement agentique |
 | [draw-io](./draw-io/) | Diagrammes draw.io | Visualiser architecture et flux de gouvernance |
 | [github-actions-docs](./github-actions-docs/) | Documentation CI/CD GitHub Actions | Décrire workflows et automatisation de tests |
+| [ui-ux-pro-max](./ui-ux-pro-max/) | Intelligence UI/UX | Rechercher styles, palettes, typographies, règles UX et recommandations par stack |
 
 ## Règle de choix rapide
 

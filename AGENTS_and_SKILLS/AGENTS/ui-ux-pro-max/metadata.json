@@ -1,0 +1,30 @@
+{
+  "name": "UI/UX Pro Max",
+  "id": "ui-ux-pro-max",
+  "description": "Conçoit et audite des interfaces UI/UX professionnelles avec design system, accessibilité, responsive layout, interaction et recommandations locales UI/UX Pro Max.",
+  "platforms": [
+    "GitHub Copilot (VS Code)"
+  ],
+  "tools": [
+    "codebase",
+    "search",
+    "execute"
+  ],
+  "tags": [
+    "ui",
+    "ux",
+    "design-system",
+    "accessibility",
+    "responsive",
+    "frontend"
+  ],
+  "files": [
+    "AGENT.md",
+    "../../.github/agents/ui-ux-pro-max.agent.md",
+    "../../.github/skills/ui-ux-pro-max/SKILL.md"
+  ],
+  "project": "Hackathon Finaxys 2026 - Gouvernance multi-agents & Finance autonome",
+  "language": "fr",
+  "version": "1.0.0",
+  "source": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill"
+}
