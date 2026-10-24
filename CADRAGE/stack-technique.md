@@ -38,7 +38,7 @@ et `hash` sur chaque ligne.
 ## Front-end
 | Outil | Rôle | Statut |
 | --- | --- | --- |
-| **React Native** (+ Expo, React Native Web) | Front v2 actuel dans `src/front` ; simulateur par défaut, transport REST/SSE via `EXPO_PUBLIC_MANAGENT_API` sur Expo Web | Liaison REST/SSE et HITL validés le 24/10/2026 ; diagnostic résolu : le front et les scénarios utilisaient l'API `:8017` (audit valide de 1 444 événements), tandis que la vérification avait consulté l'ancienne API `:8000` (audit valide de 220 événements). Aucun nouveau scénario requis |
+| **React Native** (+ Expo, React Native Web) | Front v2 actuel dans `src/front` ; simulateur par défaut, transport REST/SSE via `EXPO_PUBLIC_MANAGENT_API` sur Expo Web | Typecheck, export web, liaison REST/SSE et HITL validés le 24/10/2026 ; diagnostic résolu : le front et les scénarios utilisaient l'API `:8017` (audit valide de 1 444 événements), tandis que la vérification avait consulté l'ancienne API `:8000` (audit valide de 220 événements). Aucun nouveau scénario requis |
 | **HTML/CSS/JavaScript statique** | Front v1 servi par FastAPI dans `src/api/static` ; parcours live S1/S2 retesté manuellement le 24/10/2026 | Référence live éprouvée |
 
 Écrans : fil de discussion des agents, alertes, scores de confiance, timeline rejouable, carte

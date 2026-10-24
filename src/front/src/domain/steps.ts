@@ -166,6 +166,13 @@ export const MENU: MenuItem[] = [
   { kind: 'scenario', key: 'salami', icon: 'split', title: 'Ordres fractionnés', text: '12 ordres de 900 € pour passer sous les seuils' },
   { kind: 'scenario', key: 'audit_tamper', icon: 'linkBroken', title: 'Journal falsifié', text: 'Une ligne du journal est réécrite' },
 ];
+if (transport.mode === 'live') {
+  for (const item of MENU) {
+    item.text = item.text.replace(/OAT (10|30) ans/g, 'OAT 2034').replace(/EuroTech/g, 'Lumen SA');
+    if (item.sentence) item.sentence = item.sentence.replace(/OAT (10|30) ans/g, 'OAT 2034');
+  }
+}
+
 
 export function plural(n: number, word: string): string {
   return `${n} ${word}${n > 1 ? 's' : ''}`;
@@ -474,7 +481,12 @@ const ASSET_WORDS: [RegExp, string][] = [
 const CPTY_WORDS: [RegExp, string][] = [
   [/kappa|offshore/, 'Kappa Offshore Ltd'], [/apex/, 'Apex Capital Partners'], [/nexus/, 'Nexus Trading Ltd'], [/horizon/, 'Banque Horizon BFI'],
 ];
-const DEFAULT_CPTY = 'Banque Horizon BFI';
+const DEFAULT_CPTY = transport.mode === 'live' ? 'BNP-SECURITIES-SIM' : 'Banque Horizon BFI';
+const LIVE_WORDS: [RegExp, string][] = [
+  [/bund/, 'DE-BUND-2033'], [/oat|obligation|souverain/, 'FR-OAT-2034'], [/lumen/, 'EQ-LUMEN-SA'],
+  [/norda/, 'EQ-NORDA-AG'], [/verda/, 'EQ-VERDA-SE'], [/monetaire|money market/, 'MM-EUR-CASH'],
+  [/bitcoin|btc|crypto/, 'XC-BTC-PERP'], [/euro50|stoxx|derive|call/, 'OP-EURO50-CALL'],
+];
 
 export type Parsed = { side: 'buy' | 'sell'; asset: string | null; amount: number | null; counterparty: string; defaultCpty: boolean };
 
@@ -483,8 +495,10 @@ export function parseObjective(text: string): Parsed | null {
   const t = String(text || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   if (!t.trim()) return null;
   const side = /\b(vend|vente|ced|sell|allege)/.test(t) ? 'sell' : 'buy';
-  const asset = ASSET_WORDS.find(([re]) => re.test(t))?.[1] ?? null;
-  const counterparty = CPTY_WORDS.find(([re]) => re.test(t))?.[1] ?? null;
+  const words = transport.mode === 'live' ? LIVE_WORDS : ASSET_WORDS;
+  const asset = transport.mode === 'live' && /oat\s*30|30\s*ans/.test(t) ? null : words.find(([re]) => re.test(t))?.[1] ?? null;
+  const liveCpty = transport.mode === 'live' ? ['BNP-SECURITIES-SIM', 'SG-CIB-SIM', 'EXANE-SIM'].find(id => t.includes(id.toLowerCase())) : null;
+  const counterparty = liveCpty || (CPTY_WORDS.find(([re]) => re.test(t))?.[1] ?? null);
   // Montants : on préfère un nombre suivi de €, k ou M ; on ignore les maturités (« 10 ans »).
   const re = /(\d{1,3}(?:[ \u00a0\u202f.]\d{3})+|\d+)(?:,(\d+))?\s*(k|m|mille|millions?)?\s*(€|eur(?:os?)?)?(\s*ans?\b)?/g;
   let best: { value: number; score: number } | null = null;

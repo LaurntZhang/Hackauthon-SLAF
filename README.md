@@ -69,7 +69,7 @@ Prérequis : Python 3.13 et [uv](https://docs.astral.sh/uv/).
 
 ```bash
 uv sync --extra llm                        # crée .venv et installe aussi l'intégration Mistral
-uv run pytest -q                          # 146 tests : invariants, scénarios S1 à S6, API
+uv run pytest -q                          # 148 tests : invariants, scénarios S1 à S6, API
 uv run python -m scripts.run_demo         # plan B : S1 à S6 en CLI, hors ligne
 uv run uvicorn src.api.main:app --reload  # interface sur :8000, API sur :8000/docs
 ```
@@ -96,10 +96,13 @@ Le transport live v2 utilise REST et SSE. Le mode live est pris en charge sur Ex
 simulation tant qu'un transport SSE natif n'est pas ajouté. Pour un front servi sur une autre origine, définir
 `FINGUARD_CORS_ORIGINS` avec une liste d'origines autorisées séparées par des virgules.
 
+Pour vérifier le transport live, l'hydratation, le rejeu SSE et le parcours HITL sur une API jetable
+(le script crée des transactions et modifie son journal), lancer depuis la racine :
+`node src/front/scripts/check-live.cjs http://127.0.0.1:8000`.
+
 **Validation front v2 (24/10/2026) :**
 
-- **Vérifié :** `npm ci` réussi depuis `package-lock.json` sous Node 24.22.1 (minimum Expo SDK 58 : Node 22.13.x) ;
-  `npm run typecheck` passe après ajout de `setConnection()` au contrat `Store`. L'API répond sur `/health` ; Expo Web
+- **Vérifié :** `npm run typecheck` et `npm run export:web` passent sous Node 24.22.1. L'API répond sur `/health` ; Expo Web
   démarre avec `EXPO_PUBLIC_MANAGENT_API=http://127.0.0.1:8017` sur `http://localhost:8081`. Dans le navigateur,
   le mode indique `API live · connecté` et le flux `GET /events` est indiqué connecté. S1 apparaît exécuté ; le
   compteur affiché passe de 1 412 à 1 427 événements, avec zéro rejet du contrat AuditEvent. S2 affiche la demande
@@ -117,6 +120,10 @@ simulation tant qu'un transport SSE natif n'est pas ajouté. Pour un front servi
   aucun nouveau scénario n'est nécessaire.
 - **Lint :** `expo lint` reste non validé ; faute de configuration ESLint, Expo CLI a proposé d'ajouter ESLint et
   `eslint-config-expo`. Cette installation automatique a été interrompue pour conserver le manifeste et le lockfile.
+- **Retest d'intégration (24/10/2026) :** `node src/front/scripts/check-live.cjs` passe contre une API temporaire
+  (hydratation, rejeu/déduplication SSE, S1, S2/HITL par PIN, commandes opérateur, chaîne d'audit). Le parcours S2
+  a aussi été exécuté dans Expo Web : la décision signée reprend l'opération, qui s'exécute ; la preuve reste valide
+  sur 17 événements. L'export web passe avec et sans `EXPO_PUBLIC_MANAGENT_API`.
 
 Le retest live documenté ci-dessous concerne le front v1.
 

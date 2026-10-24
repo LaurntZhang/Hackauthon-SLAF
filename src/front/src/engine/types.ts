@@ -4,6 +4,7 @@
  */
 
 export type AuditEvent = {
+  rawEvent?: AuditEvent;
   timestamp: string;
   correlation_id: string;
   agent_id: string;
@@ -40,8 +41,8 @@ export type HitlCardData = {
   thread_id: string;
   correlation_id: string;
   intent: Intent;
-  asset_label?: string;
-  requested_at?: string;
+  asset_label: string;
+  requested_at: string | null;
   reasons?: string[];
   intent_hash: string;
   policy?: { outcome: string; explanation?: string; effective_max?: number; policy_version?: string };
@@ -148,7 +149,7 @@ export interface Store {
   decisionRecord(corr: string): DecisionRecord | null;
 }
 
-export type Decision = { action: 'approve' | 'reject'; approver_id: string; timestamp: string; signature: string; pin?: string };
+export type Decision = { pin?: string; action: 'approve' | 'reject'; approver_id: string; timestamp: string; signature: string };
 
 export interface Transport {
   mode: 'sim' | 'live';

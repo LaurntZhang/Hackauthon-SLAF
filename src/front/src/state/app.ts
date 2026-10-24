@@ -53,7 +53,7 @@ let ui: UiState = {
   selectedLine: null,
   xaiCorr: null,
   openDetails: [],
-  composer: { open: false, asset: 'OAT-30A', side: 'buy', amount: '12000', counterparty: 'Banque Horizon BFI', error: null },
+  composer: { open: false, asset: transport.mode === 'live' ? 'FR-OAT-2034' : 'OAT-30A', side: 'buy', amount: '12000', counterparty: transport.mode === 'live' ? 'BNP-SECURITIES-SIM' : 'Banque Horizon BFI', error: null },
   running: null,
   replay: null,
   selected: null,
@@ -218,7 +218,7 @@ function download(filename: string, text: string, type: string) {
 }
 
 export function exportJournal() {
-  const lines = store.events.map((_, i) => JSON.stringify(store.journalLine(i))).join('\n');
+  const lines = store.events.map((_, i) => JSON.stringify(store.journalLine(i).rawEvent || store.journalLine(i))).join('\n');
   download('audit.jsonl', lines ? `${lines}\n` : '', 'application/x-ndjson');
   announce(`Journal exporté : ${plural(store.events.length, 'événement')}.`);
 }
@@ -465,6 +465,7 @@ store.subscribe(onStoreChange);
 function setupChannel() {
   const BC = (globalThis as any).BroadcastChannel;
   // Navigateur uniquement (pas pendant le rendu statique côté Node, ni en natif).
+  if (transport.mode === 'live') return;
   if (Platform.OS !== 'web' || typeof window === 'undefined' || typeof document === 'undefined' || !BC) return;
   channel = new BC('managent-hitl') as Channel;
   channel.onmessage = async ({ data }) => {

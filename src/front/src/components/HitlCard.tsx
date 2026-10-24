@@ -46,8 +46,6 @@ export function HitlCard({ card, onDecide, onReport, getRecord, resolvedStatus }
   const intent = card.intent;
   const amount = fmt.eur(intent.amount);
   const maxAmount = (card.policy && card.policy.effective_max) || C.LIMITS.autonomousMax;
-  const assetLabel = card.asset_label || fmt.assetLabel(intent.asset);
-  const requestedAt = card.requested_at ? fmt.time(card.requested_at) : '—';
 
   // Décision prise ailleurs : on l'affiche, sauf si c'est notre propre signature en cours de transmission.
   useEffect(() => {
@@ -86,18 +84,18 @@ export function HitlCard({ card, onDecide, onReport, getRecord, resolvedStatus }
   async function submit() {
     if (busy) return;
     if (!/^\d{4}$/.test(pin)) return setError('Saisissez les 4 chiffres du code.');
-    if (transport.mode !== 'live' && pin !== C.DEMO_PIN) {
+    if (transport.mode === 'sim' && pin !== C.DEMO_PIN) {
       setPin('');
       return setError("Code incorrect. La décision n'a pas été signée.");
     }
     const timestamp = new Date().toISOString();
     const payload = cryptoLib.hitlPayload(card.thread_id, act, C.APPROVER_ID, timestamp, card.intent_hash);
-    const decision: Decision = { action: act, approver_id: C.APPROVER_ID, timestamp, signature: cryptoLib.hmacHex(C.DEMO_HMAC_KEY, payload) };
+    const decision: Decision = { action: act, approver_id: C.APPROVER_ID, timestamp, pin, signature: transport.mode === 'sim' ? cryptoLib.hmacHex(C.DEMO_HMAC_KEY, payload) : '' };
     setBusy(true);
-    const res = await onDecide({ ...decision, pin });
+    const res = await onDecide(decision);
     setBusy(false);
     if (!res || !res.ok) return setError((res && res.error) || "La décision n'a pas pu être transmise.");
-    setResult({ signature: res.signature || (transport.mode === 'live' ? undefined : decision.signature) });
+    setResult({ signature: res.signature || decision.signature || undefined });
     setView('done');
   }
 
@@ -112,10 +110,10 @@ export function HitlCard({ card, onDecide, onReport, getRecord, resolvedStatus }
         {fmt.side(intent.side)} de {amount}
       </Text>
       <Text style={[styles.asset, { color: colors.text }]}>
-        {assetLabel} <Text style={{ color: colors.muted }}>· {C.ASSET_TYPE_LABELS[intent.asset_type || ''] || intent.asset_type}</Text>
+        {card.asset_label} <Text style={{ color: colors.muted }}>· {C.ASSET_TYPE_LABELS[intent.asset_type || ''] || intent.asset_type}</Text>
       </Text>
       <View style={{ marginTop: space.s2 }}>
-        <Facts rows={[['Contrepartie', intent.counterparty], ['Demandée à', requestedAt], ['Dossier', card.correlation_id]]} />
+        <Facts rows={[['Contrepartie', intent.counterparty], ['Demandée à', card.requested_at ? fmt.time(card.requested_at) : 'Heure indisponible'], ['Dossier', card.correlation_id]]} />
       </View>
     </View>
   );
@@ -133,7 +131,7 @@ export function HitlCard({ card, onDecide, onReport, getRecord, resolvedStatus }
           {approve ? 'Approuver' : 'Refuser'} {amount}
         </Text>
         <Text style={[styles.asset, { color: colors.muted }]}>
-          {assetLabel} · {intent.counterparty}
+          {card.asset_label} · {intent.counterparty}
         </Text>
         <Text style={[styles.text, { color: colors.text2 }]}>
           La décision sera signée (HMAC-SHA256) et liée à l'empreinte de l'ordre <Text style={styles.mono}>{fmt.shortHash(card.intent_hash)}</Text>. Elle sera inscrite au journal de preuve.
@@ -146,7 +144,7 @@ export function HitlCard({ card, onDecide, onReport, getRecord, resolvedStatus }
         <View style={styles.help}>
           <Icon name="fingerprint" size={16} color={colors.muted} />
           <Text style={[styles.small, { color: colors.muted }]}>
-            {transport.mode === 'live' ? 'Le code est vérifié par le serveur.' : `Simule la biométrie du téléphone. Code de démo : ${C.DEMO_PIN}.`}
+            Simule la biométrie du téléphone. {transport.mode === 'sim' ? `Code de démo : ${C.DEMO_PIN}.` : 'Saisissez le code configuré sur le serveur.'}
           </Text>
         </View>
         {error ? (
@@ -222,7 +220,7 @@ export function HitlCard({ card, onDecide, onReport, getRecord, resolvedStatus }
           Décision mise en attente
         </Text>
         <Text style={[styles.text, { color: colors.text2, textAlign: 'center' }]}>
-          L'opération de {amount} sur {assetLabel} reste suspendue : aucun ordre ne part sans votre signature.
+          L'opération de {amount} sur {card.asset_label} reste suspendue : aucun ordre ne part sans votre signature.
         </Text>
         <Button label="Reprendre la décision" icon="replay" variant="primary" size="lg" onPress={() => setView('review')} />
       </View>

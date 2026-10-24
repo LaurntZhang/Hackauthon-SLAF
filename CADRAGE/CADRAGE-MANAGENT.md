@@ -168,7 +168,7 @@ déclencher qu'une **quarantaine d'agent** ; seul l'humain peut couper globaleme
 - **Clients :** front v2 Expo / React Native Web (`src/front`) pour la tour de contrôle et l'écran du gérant ;
   front HTML/JS v1 (`src/api/static`) conservé et servi par FastAPI. Le simulateur v2 est le mode par défaut.
   `EXPO_PUBLIC_MANAGENT_API` active le transport live v2 sur Expo Web. La liaison REST/SSE et l'approbation HITL
-  par PIN sont intégrées. Au 24/10/2026, `npm ci` et le typecheck Expo sont validés ; Expo Web démarre avec
+  par PIN sont intégrées. Au 24/10/2026, le typecheck et l'export web Expo sont validés ; Expo Web démarre avec
   l'URL FastAPI configurée. Le retest navigateur v2 indique `API live · connecté`, SSE connecté, S1 exécuté (1 427 événements
   affichés après le scénario) et S2/HITL approuvé par PIN puis exécuté (1 444 événements affichés). **Diagnostic :**
   `.integration-worktree/logs/v2-integration-test.jsonl` contient les deux corrélations (S1 séquences 1413–1427, S2

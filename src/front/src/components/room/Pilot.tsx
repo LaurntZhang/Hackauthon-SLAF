@@ -1,10 +1,11 @@
+import { LIVE_ASSETS, LIVE_COUNTERPARTIES } from '../../engine/liveCatalog';
 /*
  * Colonne de pilotage : cas de démonstration S1–S6, variantes à composer, formulaire d'opération, animation.
  */
 import { router } from 'expo-router';
 import { Pressable, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 
-import { C, store } from '../../engine';
+import { transport, C, store } from '../../engine';
 import { badge, CASES, latestRun, PRESETS } from '../../domain/dashboard';
 import * as app from '../../state/app';
 import { useTheme } from '../../theme/ThemeProvider';
@@ -167,13 +168,13 @@ function Composer() {
   const { colors } = useTheme();
   const c = ui.composer;
   const busy = app.busy();
-  const assets = Object.entries(C.ASSETS).map(([id, a]: [string, any]) => ({
+  const assets = Object.entries(transport.mode === 'live' ? LIVE_ASSETS : C.ASSETS).map(([id, a]: [string, any]) => ({
     value: id,
     label: a.label,
     hint: !['bond', 'equity', 'cash'].includes(a.type) ? 'hors univers' : C.ASSET_TYPE_LABELS[a.type],
   }));
   const cptys = [
-    ...C.COUNTERPARTIES.map((x: string) => ({ value: x, label: x, hint: 'KYC' })),
+    ...(transport.mode === 'live' ? LIVE_COUNTERPARTIES : C.COUNTERPARTIES).map((x: string) => ({ value: x, label: x, hint: 'KYC' })),
     ...C.UNLISTED_COUNTERPARTIES.map((x: string) => ({ value: x, label: x, hint: 'hors liste blanche' })),
   ];
   return (
