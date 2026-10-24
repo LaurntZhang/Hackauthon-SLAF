@@ -1,0 +1,96 @@
+diff --git a/node_modules/react-native-web/dist/cjs/vendor/react-native/Animated/useAnimatedProps.js b/node_modules/react-native-web/dist/cjs/vendor/react-native/Animated/useAnimatedProps.js
+index 8702553..6e67439 100644
+--- a/node_modules/react-native-web/dist/cjs/vendor/react-native/Animated/useAnimatedProps.js
++++ b/node_modules/react-native-web/dist/cjs/vendor/react-native/Animated/useAnimatedProps.js
+@@ -20,6 +20,7 @@ var _useRefEffect = _interopRequireDefault(require("../Utilities/useRefEffect"))
+ var _NativeAnimatedHelper = _interopRequireDefault(require("./NativeAnimatedHelper"));
+ var _react = require("react");
+ var _useLayoutEffect = _interopRequireDefault(require("../../../modules/useLayoutEffect"));
++var _Platform = _interopRequireDefault(require("../../../exports/Platform"));
+ function useAnimatedProps(props) {
+   var _useReducer = (0, _react.useReducer)(count => count + 1, 0),
+     scheduleUpdate = _useReducer[1];
+@@ -82,7 +83,7 @@ function useAnimatedProps(props) {
+ function reduceAnimatedProps(node) {
+   // Force `collapsable` to be false so that the native view is not flattened.
+   // Flattened views cannot be accurately referenced by the native driver.
+-  return (0, _objectSpread2.default)((0, _objectSpread2.default)({}, node.__getValue()), {}, {
++  return (0, _objectSpread2.default)((0, _objectSpread2.default)({}, node.__getValue()), _Platform.default.OS === 'web' ? {} : {
+     collapsable: false
+   });
+ }
+diff --git a/node_modules/react-native-web/dist/exports/ScrollView/index.js b/node_modules/react-native-web/dist/exports/ScrollView/index.js
+index 53f53d3..4e4ac83 100644
+--- a/node_modules/react-native-web/dist/exports/ScrollView/index.js
++++ b/node_modules/react-native-web/dist/exports/ScrollView/index.js
+@@ -540,9 +540,10 @@ class ScrollView extends React.Component {
+         return child;
+       }
+     }) : this.props.children;
+-    var contentContainer = /*#__PURE__*/React.createElement(View, _extends({}, contentSizeChangeProps, {
++    var contentContainer = /*#__PURE__*/React.createElement(View, _extends({}, contentSizeChangeProps, Platform.OS === 'web' ? {} : {
++      collapsable: false
++    }, {
+       children: children,
+-      collapsable: false,
+       ref: this._setInnerViewRef,
+       style: [horizontal && styles.contentContainerHorizontal, centerContent && styles.contentContainerCenterContent, contentContainerStyle]
+     }));
+diff --git a/node_modules/react-native-web/dist/vendor/react-native/Animated/useAnimatedProps.js b/node_modules/react-native-web/dist/vendor/react-native/Animated/useAnimatedProps.js
+index 7b7c12c..d1dea9c 100644
+--- a/node_modules/react-native-web/dist/vendor/react-native/Animated/useAnimatedProps.js
++++ b/node_modules/react-native-web/dist/vendor/react-native/Animated/useAnimatedProps.js
+@@ -17,6 +17,7 @@ import useRefEffect from '../Utilities/useRefEffect';
+ import NativeAnimatedHelper from './NativeAnimatedHelper';
+ import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
+ import useLayoutEffect from '../../../modules/useLayoutEffect';
++import Platform from '../../../exports/Platform';
+ export default function useAnimatedProps(props) {
+   var _useReducer = useReducer(count => count + 1, 0),
+     scheduleUpdate = _useReducer[1];
+@@ -80,7 +81,9 @@ function reduceAnimatedProps(node) {
+   // Force `collapsable` to be false so that the native view is not flattened.
+   // Flattened views cannot be accurately referenced by the native driver.
+   return _objectSpread(_objectSpread({}, node.__getValue()), {}, {
+-    collapsable: false
++    ...(Platform.OS === 'web' ? {} : {
++      collapsable: false
++    })
+   });
+ }
+ 
+diff --git a/node_modules/react-native-web/src/exports/ScrollView/index.js b/node_modules/react-native-web/src/exports/ScrollView/index.js
+index 6b56e89..208aec8 100644
+--- a/node_modules/react-native-web/src/exports/ScrollView/index.js
++++ b/node_modules/react-native-web/src/exports/ScrollView/index.js
+@@ -608,8 +608,8 @@ class ScrollView extends React.Component<ScrollViewProps> {
+     const contentContainer = (
+       <View
+         {...contentSizeChangeProps}
++        {...(Platform.OS === 'web' ? {} : { collapsable: false })}
+         children={children}
+-        collapsable={false}
+         ref={this._setInnerViewRef}
+         style={[
+           horizontal && styles.contentContainerHorizontal,
+diff --git a/node_modules/react-native-web/src/vendor/react-native/Animated/useAnimatedProps.js b/node_modules/react-native-web/src/vendor/react-native/Animated/useAnimatedProps.js
+index 64b31b0..844fb24 100644
+--- a/node_modules/react-native-web/src/vendor/react-native/Animated/useAnimatedProps.js
++++ b/node_modules/react-native-web/src/vendor/react-native/Animated/useAnimatedProps.js
+@@ -23,6 +23,7 @@ import {
+ } from 'react';
+ 
+ import useLayoutEffect from '../../../modules/useLayoutEffect';
++import Platform from '../../../exports/Platform';
+ 
+ type ReducedProps<TProps> = {
+   ...TProps,
+@@ -107,7 +108,7 @@ function reduceAnimatedProps<TProps>(
+   // Flattened views cannot be accurately referenced by the native driver.
+   return {
+     ...node.__getValue(),
+-    collapsable: false,
++    ...(Platform.OS === 'web' ? {} : {collapsable: false}),
+   };
+ }
+ 
