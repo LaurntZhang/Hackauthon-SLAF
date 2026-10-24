@@ -11,7 +11,7 @@ from pydantic import BaseModel, ValidationError
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_MODEL = "mistral:mistral-small-latest"
+DEFAULT_MODEL = "mistralai:mistral-small-latest"
 
 
 class LLMUnavailableError(Exception):

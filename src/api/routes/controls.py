@@ -218,8 +218,12 @@ def release_quarantine(agent_id: str, body: SignedControlRequest, system: System
 
 @router.get("/controls/state", response_model=ControlsState)
 def controls_state(system: SystemDep, runtime_id: str = Query(default=MAIN_RUNTIME_ID)) -> ControlsState:
-    """Kill switch, circuit breaker, mandats et trust scores d'un runtime."""
-    runtime = system.runtime(runtime_id)
+    """Kill switch, circuit breaker, mandats et trust scores d'un runtime.
+
+    Lecture tolérante : si la sandbox de scénario demandée a expiré, on sert l'état du
+    runtime principal plutôt que de renvoyer 404 (le front reste fonctionnel au rechargement).
+    """
+    runtime = system.runtime_or_main(runtime_id)
     return ControlsState(
         policy_version=runtime.config.version,
         kill_switch=kill_switch_state(system.shared.kill_switch),
@@ -232,5 +236,8 @@ def controls_state(system: SystemDep, runtime_id: str = Query(default=MAIN_RUNTI
 
 @router.get("/agents", response_model=list[AgentMandate])
 def list_agents(system: SystemDep, runtime_id: str = Query(default=MAIN_RUNTIME_ID)) -> list[AgentMandate]:
-    """Mandats effectifs déclarés (trust score et quarantaine inclus)."""
-    return system.runtime(runtime_id).mandates.all()
+    """Mandats effectifs déclarés (trust score et quarantaine inclus).
+
+    Lecture tolérante : runtime de scénario expiré → mandats du runtime principal.
+    """
+    return system.runtime_or_main(runtime_id).mandates.all()

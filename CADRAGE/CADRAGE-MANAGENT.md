@@ -165,8 +165,8 @@ déclencher qu'une **quarantaine d'agent** ; seul l'humain peut couper globaleme
 [managent-2-architecture-technique.drawio](./managent-2-architecture-technique.drawio) répond à la question :
 **qu'est-ce qu'on code, et où ?**
 
-- **Clients :** front v2 Expo / React Native Web (`src/front`) pour la tour de contrôle et l'écran du gérant ;
-  front HTML/JS v1 (`src/api/static`) conservé et servi par FastAPI. Le simulateur v2 est le mode par défaut.
+- **Clients :** front v2 Expo / React Native Web (`src/front`) pour la tour de contrôle et l'écran du gérant.
+  L'ancien front HTML/JS v1 (`src/api/static`) a été retiré ; FastAPI ne sert plus que du JSON. Le simulateur v2 est le mode par défaut.
   `EXPO_PUBLIC_MANAGENT_API` active le transport live v2 sur Expo Web. La liaison REST/SSE et l'approbation HITL
   par PIN sont intégrées. Au 24/10/2026, le typecheck et l'export web Expo sont validés ; Expo Web démarre avec
   l'URL FastAPI configurée. Le retest navigateur v2 indique `API live · connecté`, SSE connecté, S1 exécuté (1 427 événements
@@ -244,8 +244,12 @@ human_decision, authorization, order, report, status, reason, audit_trail (opera
 | GET | `/audit/events` | lire les événements d'audit pour la timeline |
 | GET | `/audit/verify` | résultat de `verify_chain()` |
 | GET | `/decisions/{correlation_id}` | fiche XAI |
-| GET | `/` | servir la tour de contrôle (`dashboard.html`) |
-| GET | `/approval.html` | servir la carte HITL |
+| GET | `/` | métadonnées de l'API (JSON : version, `/docs`, `/health`) |
+| GET | `/health` | sonde de vivacité |
+
+> L'ancien front HTML v1 servi par FastAPI (`/` → `dashboard.html`, `/approval.html`) a été retiré :
+> l'API est désormais purement JSON. La tour de contrôle et la carte HITL sont fournies par le front
+> React Native v2 (`src/front`), qui consomme ces routes en REST/SSE.
 
 ---
 
@@ -276,7 +280,7 @@ src/
 ├── graph/finguard_graph.py        # StateGraph (évolution de governed_transaction.py)
 ├── observability/                 # audit_chain, event_bus, decision_record, langfuse_adapter
 ├── simulation/                    # market.py, scenarios.py, données synthétiques
-└── api/                           # main.py, routes, static/dashboard.html
+└── api/                           # main.py, routes (API JSON pure ; front servi par src/front)
 config/policies.yaml, config/mandates.yaml
 tests/                             # test_<module>.py + test_scenarios.py (S1 à S6)
 ```
@@ -287,7 +291,7 @@ tests/                             # test_<module>.py + test_scenarios.py (S1 à
 | L1 | `src/control/*` + tests unitaires | L0 |
 | L2 | `src/agents/*` en mode script, plus LLM en option | L0 |
 | L3 | `finguard_graph.py` + `audit_chain` + `event_bus` + `test_scenarios.py` | L1, L2 |
-| L4 | API FastAPI + SSE + `dashboard.html` + carte HITL | L3 |
+| L4 | API FastAPI + SSE + front v2 React Native (`src/front`) + carte HITL | L3 |
 | L5 | superviseur, fiche XAI, Langfuse, pitch | L3 |
 
 **Priorités :** les lots **MUST** sont L0, L1, L2 et L3 (démo en CLI). L4 est **SHOULD**. L5 est **COULD**.

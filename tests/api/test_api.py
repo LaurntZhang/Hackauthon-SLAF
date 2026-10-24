@@ -31,9 +31,10 @@ def approval_body(card: dict[str, Any], action: str = "approve", secret: str = S
 def test_root_health_and_openapi(client: TestClient) -> None:
     page = client.get("/")
     assert page.status_code == 200
-    assert "text/html" in page.headers["content-type"]
-    assert "dashboard.js" in page.text
-    assert client.get("/approval.html").status_code == 200
+    assert "application/json" in page.headers["content-type"]
+    body = page.json()
+    assert body["version"] and body["health"] == "/health"
+    assert client.get("/approval.html").status_code == 404
     assert client.get("/health").json() == {"status": "ok"}
     paths = client.get("/openapi.json").json()["paths"]
     for path in (

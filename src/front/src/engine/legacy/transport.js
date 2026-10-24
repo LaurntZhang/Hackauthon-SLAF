@@ -414,7 +414,17 @@
     }
 
     async syncControls() {
-      const state = await this.request('GET', '/controls/state?runtime_id=' + encodeURIComponent(this.runtimeId));
+      // Les runtimes de scénarios sont éphémères côté serveur ; le journal d'audit, lui, est
+      // persistant et peut encore référencer une sandbox disparue. Si l'état du runtime courant
+      // n'est plus disponible, on retombe sur 'main' pour que l'interface reste fonctionnelle.
+      let state;
+      try {
+        state = await this.request('GET', '/controls/state?runtime_id=' + encodeURIComponent(this.runtimeId));
+      } catch (err) {
+        if (this.runtimeId === 'main') throw err;
+        this.runtimeId = 'main';
+        state = await this.request('GET', '/controls/state?runtime_id=main');
+      }
       this.store.kill = { global: state.kill_switch.global_engaged, by: state.kill_switch.global_stop?.actor_id, at: state.kill_switch.global_stop?.engaged_at };
       this.store.risk.breaker = state.circuit_breaker.open ? 'open' : 'closed';
       this.store.risk.freq = state.circuit_breaker.orders_last_minute;

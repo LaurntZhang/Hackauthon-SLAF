@@ -41,7 +41,7 @@ chiffrées et données synthétiques. Le marché est simulé.
 | [CADRAGE/solution-managent-synthese.md](../CADRAGE/solution-managent-synthese.md) | Synthèse d'une page |
 
 **Stack :** front Expo / React Native / React Native Web (`src/front`) ; back Python 3.13 · LangGraph · Pydantic v2 ·
-FastAPI + SSE · pytest · Langfuse (optionnel). Le front HTML v1 reste servi par FastAPI.
+FastAPI + SSE · pytest · Langfuse (optionnel). L'API est purement JSON ; l'ancien front HTML v1 a été retiré.
 
 ## Contrat de données partagé
 
@@ -74,12 +74,11 @@ uv run python -m scripts.run_demo         # plan B : S1 à S6 en CLI, hors ligne
 uv run uvicorn src.api.main:app --reload  # interface sur :8000, API sur :8000/docs
 ```
 
-Ouvrir `http://127.0.0.1:8000` affiche la tour de contrôle en simulation locale. Ajouter `?mode=live`
-active le transport FastAPI : lancement des scénarios et transactions par REST, chargement de l'état,
-des approbations en attente et de l'audit, puis réception des événements par SSE. La carte HITL est
-disponible sur `/approval.html?mode=live` ; elle charge les demandes en attente et transmet la décision
-signée par le serveur après saisie du PIN. Les approbations et commandes signées utilisent le PIN de
-démonstration `1234` par défaut, configurable avec
+Ouvrir `http://127.0.0.1:8000` renvoie les métadonnées de l'API (version, `/docs`, `/health`) : le
+back-end est désormais une API pure. L'interface est le front React Native v2 (`src/front`, voir plus
+bas), qui consomme les routes REST et le flux SSE. Il expose la tour de contrôle et la carte HITL
+(Approuver / Rejeter / Rapport) ; la décision est signée par le serveur après saisie du PIN. Les
+approbations et commandes signées utilisent le PIN de démonstration `1234` par défaut, configurable avec
 `FINGUARD_DEMO_PIN`. Ce parcours est réservé à la démo locale : il ne constitue pas une authentification
 adaptée à la production. Le mode démonstration fonctionne sans réseau ni clé API (`FINGUARD_LLM=off` par défaut).
 

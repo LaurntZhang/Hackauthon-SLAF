@@ -405,6 +405,20 @@ class FinGuardSystem:
             raise NotFoundError(f"Runtime inconnu : {runtime_id}", rule_id="RUNTIME_UNKNOWN")
         return runtime
 
+    def runtime_or_main(self, runtime_id: str) -> GraphRuntime:
+        """Runtime par identifiant pour une LECTURE : retombe sur `main` si la sandbox a disparu.
+
+        Les sandboxes de scénarios sont éphémères (en mémoire, plafonnées, perdues au redémarrage) ;
+        le journal d'audit, lui, est persistant et peut encore référencer un ancien `runtime_id`.
+        Pour la consultation de la tour de contrôle, on ne veut pas planter le front sur un 404 :
+        on sert l'état du runtime principal. Les routes d'écriture gardent `runtime()` et son 404.
+        """
+        if runtime_id == MAIN_RUNTIME_ID:
+            return self.main
+        with self._lock:
+            runtime = self._sandboxes.get(runtime_id)
+        return runtime if runtime is not None else self.main
+
     def runtimes(self) -> list[GraphRuntime]:
         """Tous les runtimes actifs."""
         with self._lock:
