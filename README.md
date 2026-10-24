@@ -63,16 +63,47 @@ Six scénarios, chacun associé à un test (détail dans le cadrage, §9) :
 | S5 | 12 ordres de 900 € | Circuit breaker ouvert |
 | S6 | Ligne d'audit altérée | Vérification de la chaîne en échec |
 
-## Lancer le projet
+## Lancer le projet (après clonage)
 
-Prérequis : Python 3.13 et [uv](https://docs.astral.sh/uv/).
+Prérequis : Python 3.13+. Toutes les commandes se lancent depuis la racine du projet.
+
+**1. Créer le fichier d'environnement** (il n'est pas versionné ; copie du modèle fourni) :
+
+```powershell
+Copy-Item .env.example .env          # bash/macOS : cp .env.example .env
+```
+
+Par défaut `.env` démarre en mode hors ligne (`FINGUARD_LLM=off`, sans clé API). Pour activer les agents
+Mistral, éditer `.env` : mettre `FINGUARD_LLM=on` et renseigner `MISTRAL_API_KEY`.
+
+**2. Installer les dépendances.** Avec [uv](https://docs.astral.sh/uv/) (recommandé) :
 
 ```bash
-uv sync --extra llm                        # crée .venv et installe aussi l'intégration Mistral
-uv run pytest -q                          # 148 tests : invariants, scénarios S1 à S6, API
-uv run python -m scripts.run_demo         # plan B : S1 à S6 en CLI, hors ligne
-uv run uvicorn src.api.main:app --reload  # interface sur :8000, API sur :8000/docs
+uv sync --extra llm                  # crée .venv et installe l'intégration Mistral (omettre --extra llm pour le mode hors ligne seul)
 ```
+
+Sans uv, avec `venv` + `pip` :
+
+```powershell
+python -m venv .venv
+.venv\Scripts\python.exe -m ensurepip --upgrade        # si pip absent du venv
+.venv\Scripts\python.exe -m pip install -e ".[llm]"    # bash : .venv/bin/python -m pip install -e ".[llm]"
+```
+
+**3. Lancer l'API** depuis la racine. Le script `scripts.serve` charge `.env` avant uvicorn :
+
+```powershell
+# avec uv
+uv run python -m scripts.serve --host 127.0.0.1 --port 8000
+# ou directement via le venv
+.venv\Scripts\python.exe -m scripts.serve --host 127.0.0.1 --port 8000
+```
+
+> Ne pas utiliser `uvicorn --reload` directement : le reloader relance un sous-process qui ne recharge
+> pas le `.env` (ni la clé Mistral, ni le secret HITL). Toujours passer par `scripts.serve`.
+
+**Vérifier** (facultatif) : `uv run pytest -q` (148 tests) ou `uv run python -m scripts.run_demo`
+(scénarios S1 à S6 en CLI, hors ligne).
 
 Ouvrir `http://127.0.0.1:8000` renvoie les métadonnées de l'API (version, `/docs`, `/health`) : le
 back-end est désormais une API pure. L'interface est le front React Native v2 (`src/front`, voir plus
@@ -82,14 +113,20 @@ approbations et commandes signées utilisent le PIN de démonstration `1234` par
 `FINGUARD_DEMO_PIN`. Ce parcours est réservé à la démo locale : il ne constitue pas une authentification
 adaptée à la production. Le mode démonstration fonctionne sans réseau ni clé API (`FINGUARD_LLM=off` par défaut).
 
-Pour lancer le front Expo v2 sur le web, dans un second terminal :
+> **Scénarios S1–S6 :** les lancer avec `FINGUARD_LLM=off` (mode déterministe reproductible). Avec
+> `FINGUARD_LLM=on`, les agents Mistral peuvent faire dévier un scénario figé. Garder `on` pour les
+> transactions en langage naturel, où le LLM apporte de la valeur.
+
+**4. Lancer le front Expo v2 sur le web**, dans un second terminal :
 
 ```powershell
 cd src/front
 npm ci
-$env:EXPO_PUBLIC_MANAGENT_API = "http://127.0.0.1:8000" # omettre pour rester en simulation
+$env:EXPO_PUBLIC_MANAGENT_API = "http://127.0.0.1:8000"   # omettre pour rester en simulation locale
 npm run web
 ```
+
+Le front est alors servi sur `http://localhost:8081` (routes `/`, `/salle`, `/gerant`).
 
 Le transport live v2 utilise REST et SSE. Le mode live est pris en charge sur Expo Web ; la cible native reste en
 simulation tant qu'un transport SSE natif n'est pas ajouté. Pour un front servi sur une autre origine, définir
