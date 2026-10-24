@@ -1,0 +1,64 @@
+# Règles FinGuard versionnées (CADRAGE-MANAGENT.md §2 et §4). Toute modification incrémente `version`,
+# qui est inscrite dans chaque AuditEvent.
+version: "2026.10.23-1"
+
+fund:
+  name: "Alpha"
+  aum: "10000000"
+  currency: "EUR"
+
+universe:
+  allowed_asset_types: [bond, equity, cash]
+  forbidden_asset_types: [derivative, crypto]
+  allowed_currencies: [EUR]
+
+limits:
+  autonomous_max_amount: "10000"      # au-delà : ESCALATE forcé
+  max_sector_exposure: "0.20"
+  max_issuer_exposure: "0.05"
+
+counterparties:
+  whitelist: [BNP-SECURITIES-SIM, SG-CIB-SIM, EXANE-SIM]
+
+quorum:
+  unanimity_threshold: "1000"          # montant > seuil : 2 approve sur 2
+  required_approvals: 2
+  weighted_threshold: "0.70"           # montant <= seuil : ratio pondéré strictement supérieur
+
+trust:
+  initial: 100
+  ceiling: 100
+  halve_limit_below: 70
+  quarantine_below: 40
+  deltas:
+    compliant_action: 2
+    blocked_out_of_mandate: -20
+    injection_followed: -25
+    tampering_after_approval: -40
+
+risk_governor:
+  daily_budget_per_agent: "50000"
+  daily_budget_scope: autonomous       # les ordres validés par un humain sont comptés mais non bloqués
+  max_orders_per_minute: 10
+  max_consecutive_rejections: 5
+  structuring_window_seconds: 3600     # détection du saucissonnage par agent et par actif
+
+authorization:
+  ttl_seconds: 900
+
+hitl:
+  signature_algorithm: HMAC-SHA256
+  max_signature_age_seconds: 600
+  approvers: [risk_officer_1, compliance_officer_1, fund_manager_1]
+  operators: [ops_officer_1, risk_officer_1]
+
+firewall:
+  patterns:
+    - id: FW_IGNORE_INSTRUCTIONS
+      regex: "(?i)\\b(ignore|oublie|disregard)\\b.{0,40}\\b(limites?|limits?|instructions?|règles?|rules?|mandat)\\b"
+    - id: FW_FUNDS_TRANSFER
+      regex: "(?i)\\b(vire|virer|virement|wire|transfer|transf[eè]re)\\b"
+    - id: FW_ROLE_OVERRIDE
+      regex: "(?i)\\b(you are now|tu es maintenant|system prompt|act as|nouveau r[oô]le)\\b"
+    - id: FW_IBAN
+      regex: "\\b[A-Z]{2}\\d{2}(?: ?[A-Z0-9]{4}){2,7}(?: ?[A-Z0-9]{1,4})?\\b"

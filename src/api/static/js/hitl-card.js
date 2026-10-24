@@ -30,8 +30,8 @@
       return `
         <p class="hitl-eyebrow">${icon('shield')} Validation requise · AI Act art. 14</p>
         <h2 class="hitl-title" id="${uid}-title" tabindex="-1">${esc(fmt.side(intent.side))} de ${esc(amount)}</h2>
-        <p class="hitl-asset">${esc(card.asset_label)} · ${esc(C.ASSET_TYPE_LABELS[intent.asset_type] || intent.asset_type)}</p>
-        <p class="hitl-meta">${esc(intent.counterparty)} · <span class="mono">${esc(card.thread_id)}</span> · ${esc(fmt.time(card.requested_at))}</p>`;
+        <p class="hitl-asset">${esc(card.asset_label || fmt.assetLabel(intent.asset))} · ${esc(C.ASSET_TYPE_LABELS[intent.asset_type] || intent.asset_type)}</p>
+        <p class="hitl-meta">${esc(intent.counterparty)} · <span class="mono">${esc(card.thread_id)}</span> · ${esc(card.requested_at ? fmt.time(card.requested_at) : '—')}</p>`;
     }
 
     function reviewView() {
@@ -204,19 +204,22 @@
         render(pinFocus());
         return;
       }
-      if (pin !== C.DEMO_PIN) {
+      if (!options.live && pin !== C.DEMO_PIN) {
         state.error = 'Code incorrect. La décision n\'a pas été signée.';
         render(pinFocus());
         return;
       }
       const timestamp = new Date().toISOString();
-      const payload = MA.crypto.hitlPayload(card.thread_id, state.action, C.APPROVER_ID, timestamp, card.intent_hash);
-      const decision = {
-        action: state.action,
-        approver_id: C.APPROVER_ID,
-        timestamp,
-        signature: MA.crypto.hmacHex(C.DEMO_HMAC_KEY, payload),
-      };
+      let decision = { action: state.action, pin };
+      if (!options.live) {
+        const payload = MA.crypto.hitlPayload(card.thread_id, state.action, C.APPROVER_ID, timestamp, card.intent_hash);
+        decision = {
+          action: state.action,
+          approver_id: C.APPROVER_ID,
+          timestamp,
+          signature: MA.crypto.hmacHex(C.DEMO_HMAC_KEY, payload),
+        };
+      }
       state.busy = true;
       render('.hitl-title');
       const result = options.demo ? { ok: true } : await options.onDecide(decision);
@@ -226,7 +229,7 @@
         render(pinFocus());
         return;
       }
-      state.result = { signature: decision.signature };
+      state.result = decision.signature ? { signature: decision.signature } : {};
       state.view = 'done';
       render();
     }

@@ -663,7 +663,9 @@
     } else if (v.state === 'broken') {
       statusCls += ' is-broken';
       const why = v.reason === 'hash' ? 'le contenu ne correspond plus à son hash' : 'le chaînage prev_hash est rompu';
-      statusHtml = `${icon('linkBroken')}<span>verify_chain() en échec à la ligne #${v.broken_at + 1} : ${why}. Hash enregistré <span class="mono">${esc(fmt.shortHash(v.expected))}</span>, recalculé <span class="mono">${esc(fmt.shortHash(v.found))}</span>.</span>`;
+      const invalidLine = Number.isInteger(v.broken_at) ? ` à la ligne #${v.broken_at + 1}` : '';
+      const detail = v.error || `${why}${v.expected && v.found ? `. Hash enregistré ${fmt.shortHash(v.expected)}, recalculé ${fmt.shortHash(v.found)}` : ''}`;
+      statusHtml = `${icon('linkBroken')}<span>verify_chain() en échec${invalidLine} : ${esc(detail)}.</span>`;
     }
     statusEl.className = statusCls;
     setHTML(statusEl, statusHtml);
@@ -851,6 +853,7 @@
     ui.cardClosed = false;
     ui.cardCorr = p.corr;
     ui.card = MA.HitlCard.mount($('phone-body'), p.card, {
+      live: transport.mode === 'live',
       onDecide: (decision) => transport.decide(p.card.thread_id, decision),
       onReport: () => guard(transport.requestReport(p.card.thread_id)),
       getRecord: () => store.decisionRecord(p.corr),
@@ -1222,6 +1225,8 @@
   if (transport.mode === 'live') {
     $('demo-hint').textContent = 'API FastAPI';
     $('reset-btn').hidden = true;
+    const approvalLink = document.querySelector('a[href="approval.html"]');
+    if (approvalLink) approvalLink.href = 'approval.html?mode=live';
   }
   autoRun();
 })();
