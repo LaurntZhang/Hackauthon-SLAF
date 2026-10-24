@@ -431,6 +431,7 @@ class FinGuardNodes:
         result = self.ctx.risk_governor.check(
             order, proposer_id=intent.proposer_id, human_approved=authorization.human_approved
         )
+        snapshot = self.ctx.risk_governor.snapshot(intent.proposer_id)
         trail = [
             self._audit(
                 state,
@@ -438,7 +439,15 @@ class FinGuardNodes:
                 "risk_checked",
                 result.reason,
                 "ok" if result.ok else "blocked",
-                {"rules": result.rule_ids},
+                {
+                    "rules": result.rule_ids,
+                    "snapshot": {
+                        "daily_cumul": str(snapshot.daily_cumul),
+                        "orders_last_minute": snapshot.orders_last_minute,
+                        "human_approved_cumul": str(snapshot.human_approved_cumul),
+                        "freq_limit": snapshot.freq_limit,
+                    },
+                },
             )
         ]
         if result.breaker_opened_now:

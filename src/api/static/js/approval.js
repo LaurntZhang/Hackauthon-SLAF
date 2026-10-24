@@ -95,6 +95,51 @@
     });
   }
 
+  if (new URLSearchParams(window.location.search).get('mode') === 'live') {
+    let liveCard = null;
+    const poll = async () => {
+      try {
+        const response = await fetch('/approvals');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const pending = await response.json();
+        linkState.textContent = 'connecté';
+        const next = pending[0];
+        if (!next) {
+          if (!card || !card.decided) idle("La tour de contrôle est connectée. La carte apparaîtra dès qu'une opération sera escaladée.");
+        } else if (!liveCard || liveCard.thread_id !== next.thread_id) {
+          const mountedCard = MA.HitlCard.mount(body, next, {
+            live: true,
+            onDecide: async (decision) => {
+              const result = await fetch(`/approvals/${encodeURIComponent(next.thread_id)}/demo`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: decision.action, pin: decision.pin }),
+              });
+              if (!result.ok) {
+                const error = await result.json().catch(() => ({}));
+                return { ok: false, error: error.detail || `HTTP ${result.status}` };
+              }
+              return { ok: true };
+            },
+            onReport: async () => {
+              window.open(`/decisions/${encodeURIComponent(next.correlation_id)}`, '_blank', 'noopener');
+            },
+            getRecord: () => null,
+          });
+          liveCard = next;
+          card = mountedCard;
+        }
+      } catch (error) {
+        linkState.textContent = 'reconnexion…';
+        console.warn('[ManAgent] API HITL indisponible', error);
+      } finally {
+        window.setTimeout(poll, 1500);
+      }
+    };
+    idle('Connexion à la tour de contrôle…');
+    poll();
+    return;
+  }
+
   if (!channel) {
     noTower();
     return;

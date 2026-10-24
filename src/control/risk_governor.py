@@ -38,6 +38,16 @@ class GovernorResult:
 
 
 @dataclass(frozen=True)
+class RiskSnapshot:
+    """Compteurs courants utiles à la tour de contrôle."""
+
+    daily_cumul: Decimal
+    orders_last_minute: int
+    human_approved_cumul: Decimal
+    freq_limit: int
+
+
+@dataclass(frozen=True)
 class BreakerState:
     """État du circuit breaker."""
 
@@ -66,6 +76,7 @@ class RiskGovernor:
         self._lock = threading.RLock()
         self._accepted: deque[_AcceptedOrder] = deque()
         self._daily: dict[tuple[date, str], Decimal] = {}
+        self._human_approved_daily: dict[tuple[date, str], Decimal] = {}
         self._consecutive_rejections = 0
         self._open = False
         self._open_reason: str | None = None
@@ -122,6 +133,8 @@ class RiskGovernor:
             self._accepted.append(_AcceptedOrder(now, proposer_id, order.asset, order.amount, human_approved))
             if not human_approved:
                 self._daily[day_key] = spent + order.amount
+            else:
+                self._human_approved_daily[day_key] = self._human_approved_daily.get(day_key, Decimal(0)) + order.amount
             return GovernorResult(True, [], "cumul, fréquence et kill switch conformes")
 
     def record_outcome(self, *, rejected: bool) -> bool:
@@ -164,6 +177,19 @@ class RiskGovernor:
                 self._opened_at,
                 self._consecutive_rejections,
                 len(self._accepted_since(now - RATE_WINDOW)),
+            )
+
+    def snapshot(self, proposer_id: str) -> RiskSnapshot:
+        """Retourne les compteurs du jour et la fréquence pour un agent."""
+        with self._lock:
+            now = self._clock()
+            self._prune(now)
+            day_key = (now.date(), proposer_id)
+            return RiskSnapshot(
+                daily_cumul=self._daily.get(day_key, Decimal(0)),
+                orders_last_minute=len(self._accepted_since(now - RATE_WINDOW)),
+                human_approved_cumul=self._human_approved_daily.get(day_key, Decimal(0)),
+                freq_limit=self._cfg.max_orders_per_minute,
             )
 
     def _trip(self, reason: str, now: datetime) -> None:

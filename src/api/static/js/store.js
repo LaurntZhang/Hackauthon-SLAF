@@ -75,6 +75,7 @@
     reset() {
       const L = C.LIMITS;
       this.events = [];
+      this.eventHashes = new Set();
       this.invalid = 0;
       this.lastInvalid = null;
       this.runs = new Map();
@@ -115,6 +116,8 @@
         this.reportInvalid(problem, event);
         return false;
       }
+      if (this.eventHashes.has(event.hash)) return false;
+      this.eventHashes.add(event.hash);
       const index = this.events.length;
       this.events.push(event);
       this.apply(event, index);
@@ -124,7 +127,9 @@
 
     apply(e, index) {
       const ctx = e.context || {};
-      const runId = ctx.run_id || e.correlation_id;
+      // Live AuditEvents have a correlation_id but no run_id. Keep the run
+      // namespace distinct so a transaction can still be created for that id.
+      const runId = ctx.run_id || `run:${e.correlation_id}`;
       let run = this.runs.get(runId);
       if (!run) {
         run = {
@@ -187,7 +192,12 @@
           tx.path.judges = tx.verdicts.some((v) => v.vote !== 'approve') ? 'escalate' : 'pass';
           break;
         case 'quorum.decided':
-          tx.quorum = ctx.quorum || { outcome: e.status };
+          tx.quorum = ctx.quorum || {
+            outcome: e.status,
+            approvals: ctx.approvals,
+            required: ctx.required ?? ctx.required_approvals ?? tx.verdicts.length,
+            ratio: ctx.ratio ?? ctx.weighted_ratio,
+          };
           tx.path.quorum = OUTCOME_STATE[e.status] || 'pass';
           break;
         case 'hitl.requested':
@@ -308,7 +318,14 @@
     }
 
     setVerification(result) {
-      this.verification = { state: result.valid ? 'valid' : 'broken', ...result, at: new Date().toISOString() };
+      this.verification = {
+        ...result,
+        state: result.valid ? 'valid' : 'broken',
+        checked: result.checked ?? result.checked_lines,
+        broken_at: result.broken_at ?? result.first_invalid_line,
+        reason: result.reason ?? result.error,
+        at: new Date().toISOString(),
+      };
       this.mark('audit');
     }
 

@@ -4,9 +4,12 @@ from __future__ import annotations
 
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from src.api.dependencies import build_system_from_env
 from src.api.errors import register_error_handlers
@@ -15,6 +18,7 @@ from src.graph.graph_runtime import FinGuardSystem
 from src.observability.logging_config import configure_logging
 
 API_VERSION = "0.1.0"
+STATIC_DIR = Path(__file__).with_name("static")
 
 
 def create_app(system: FinGuardSystem | None = None) -> FastAPI:
@@ -41,17 +45,18 @@ def create_app(system: FinGuardSystem | None = None) -> FastAPI:
     for module in (transactions, approvals, controls, scenarios, audit, events):
         app.include_router(module.router)
 
+    app.mount("/css", StaticFiles(directory=STATIC_DIR / "css"), name="dashboard-css")
+    app.mount("/js", StaticFiles(directory=STATIC_DIR / "js"), name="dashboard-js")
+
+    @app.get("/approval", include_in_schema=False)
+    @app.get("/approval.html", include_in_schema=False)
+    def approval_page() -> FileResponse:
+        return FileResponse(STATIC_DIR / "approval.html")
+
     @app.get("/", tags=["meta"])
-    def index() -> dict[str, Any]:
-        """Point d'entrée : liens vers l'OpenAPI et les ressources principales."""
-        return {
-            "service": "managent-finguard",
-            "version": API_VERSION,
-            "docs": "/docs",
-            "openapi": "/openapi.json",
-            "events": "/events",
-            "scenarios": "/scenarios",
-        }
+    def index() -> FileResponse:
+        """Sert la tour de contrôle web ; l'API reste disponible sous ses routes habituelles."""
+        return FileResponse(STATIC_DIR / "dashboard.html")
 
     @app.get("/health", tags=["meta"])
     def health() -> dict[str, str]:

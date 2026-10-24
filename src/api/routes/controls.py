@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Query
+import os
+from datetime import UTC, datetime
+from typing import Literal
+
+from fastapi import APIRouter, HTTPException, Query
+from pydantic import BaseModel, ConfigDict, Field
 
 from src.api.dependencies import SystemDep, record_control
 from src.api.errors import ERROR_RESPONSES
+from src.control.hitl import DEMO_SECRET, control_message, sign
 from src.control.exceptions import GovernanceViolationError, InvalidSignatureError
 from src.control.kill_switch import KillSwitch, StopRecord
 from src.graph.graph_runtime import MAIN_RUNTIME_ID, GraphRuntime
@@ -20,6 +26,54 @@ from src.models.api_models import (
 from src.models.finguard_contracts import AgentMandate
 
 router = APIRouter(tags=["controls"], responses=ERROR_RESPONSES)
+
+
+class DemoControlRequest(BaseModel):
+    """Commande opérateur locale : signe côté serveur uniquement avec le secret de démo."""
+
+    model_config = ConfigDict(extra="forbid")
+    action: Literal["release_kill", "release_quarantine", "rearm_breaker"]
+    pin: str = Field(pattern=r"^\d{4}$")
+    agent_id: str | None = Field(default=None, max_length=60)
+
+
+@router.post("/controls/demo")
+def demo_control(body: DemoControlRequest, system: SystemDep) -> dict[str, object]:
+    """Exécute une commande de démonstration signée côté serveur, sans livrer la clé HMAC au front."""
+    runtime = system.main
+    if not runtime.verifier.uses_demo_secret:
+        raise HTTPException(status_code=409, detail="Les commandes par PIN sont désactivées hors secret de démonstration.")
+    if body.pin != os.getenv("FINGUARD_DEMO_PIN", "1234"):
+        raise HTTPException(status_code=403, detail="Code opérateur de démonstration incorrect.")
+    timestamp = datetime.now(UTC).replace(microsecond=0)
+    operator_id = "risk_officer_1"
+    if body.action == "release_kill":
+        command, target = "kill_switch.release", "global:*"
+    elif body.action == "release_quarantine":
+        if not body.agent_id:
+            raise HTTPException(status_code=422, detail="agent_id est requis pour lever une quarantaine.")
+        command, target = "quarantine.release", body.agent_id
+    else:
+        command, target = "circuit_breaker.rearm", runtime.runtime_id
+    signature = sign(DEMO_SECRET, control_message(
+        command=command, target=target, operator_id=operator_id, timestamp=timestamp
+    ))
+    signed = SignedControlRequest(
+        operator_id=operator_id, signature=signature, timestamp=timestamp,
+        reason="Commande opérateur depuis l'interface de démonstration.", runtime_id=runtime.runtime_id,
+    )
+    if body.action == "release_kill":
+        result = operate_kill_switch(
+            KillSwitchRequest(
+                action="release", scope="global", operator_id=operator_id,
+                reason=signed.reason, timestamp=timestamp, signature=signature,
+            ), system
+        )
+    elif body.action == "release_quarantine":
+        result = release_quarantine(body.agent_id or "", signed, system)
+    else:
+        result = rearm_circuit_breaker(signed, system)
+    return result.model_dump(mode="json")
 
 
 def _stop(record: StopRecord) -> StopInfo:

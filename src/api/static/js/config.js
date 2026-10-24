@@ -251,6 +251,8 @@
   const ACTIONS = {
     'scenario.started': { level: 'run' },
     'scenario.completed': { level: 'run' },
+    'transaction.received': { level: 'detail' },
+    'transaction.completed': { level: 'detail' },
     'firewall.scanned': { node: 'firewall', level: 'detail' },
     'intent.proposed': { node: 'proposer', level: 'main' },
     'policy.evaluated': { node: 'policy', level: 'detail' },

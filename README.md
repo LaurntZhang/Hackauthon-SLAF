@@ -70,10 +70,14 @@ Prérequis : Python 3.13 et [uv](https://docs.astral.sh/uv/).
 uv sync                                   # crée .venv et installe les dépendances
 uv run pytest -q                          # 146 tests : invariants, scénarios S1 à S6, API
 uv run python -m scripts.run_demo         # plan B : S1 à S6 en CLI, hors ligne
-uv run uvicorn src.api.main:app --reload  # API sur http://127.0.0.1:8000/docs
+uv run uvicorn src.api.main:app --reload  # interface sur :8000, API sur :8000/docs
 ```
 
-Le mode démonstration fonctionne sans réseau ni clé API (`FINGUARD_LLM=off` par défaut).
+Ouvrir `http://127.0.0.1:8000` affiche la tour de contrôle en simulation locale. Ajouter `?mode=live`
+pour la connecter à FastAPI ; la page mobile est disponible sur `/approval.html`. Les approbations et
+commandes signées utilisent le PIN de démonstration `1234` par défaut, configurable avec
+`FINGUARD_DEMO_PIN`. Ce parcours est réservé à la démo locale : il ne constitue pas une authentification
+adaptée à la production. Le mode démonstration fonctionne sans réseau ni clé API (`FINGUARD_LLM=off` par défaut).
 
 | Variable | Défaut | Rôle |
 | --- | --- | --- |
