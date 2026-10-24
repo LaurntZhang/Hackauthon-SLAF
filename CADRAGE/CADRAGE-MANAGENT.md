@@ -178,6 +178,12 @@ déclencher qu'une **quarantaine d'agent** ; seul l'humain peut couper globaleme
   réconcilié en consultant `/audit/*` sur `:8017` ; aucun nouveau scénario ni correctif de code n'est requis.
   Le parcours live S1/S2 déjà retesté antérieurement concerne le v1. La cible native reste en simulation tant qu'un transport
   SSE natif n'est pas disponible. La CLI `run_demo.py` est le plan B côté back.
+  Après le merge sur `dev` (`0644170`), le typecheck et l'export Expo Web passent sous Node 25.4, avec les routes `/`,
+  `/salle` et `/gerant`. Les 7 tests de scénarios S1–S6 passent via l'environnement Python disponible. Les tests
+  HTTP/API automatisés n'ont pas terminé et ont été interrompus après blocage. Le contrôle manuel post-merge confirme
+  `/health` OK sur `:8017` et `/audit/verify` valide sur 1 459 lignes, sans erreur, hash final
+  `db8c307ed4b64d776f0d1226bdc4a54054880bc8c0ac48817727ea8b7a4e8268` (`v2-integration-test.jsonl`). Aucun scénario
+  en serveur ni journal de démo n'a été touché pendant ce smoke test.
 - **Un seul processus Python** lancé par uvicorn : l'API FastAPI, puis le **StateGraph LangGraph** à
   12 nœuds, avec les nœuds agents en bleu et les nœuds de contrôle en vert.
   - Ligne 1 : `START → firewall → proposer → policy_engine → judges ∥ → quorum`.

@@ -125,6 +125,15 @@ Pour vérifier le transport live, l'hydratation, le rejeu SSE et le parcours HIT
   a aussi été exécuté dans Expo Web : la décision signée reprend l'opération, qui s'exécute ; la preuve reste valide
   sur 17 événements. L'export web passe avec et sans `EXPO_PUBLIC_MANAGENT_API`.
 
+**Smoke test après merge sur `dev` (24/10/2026) :** le HEAD testé est le commit de merge `0644170`.
+`npm run typecheck` et `npm run export:web` passent sous Node 25.4. L'export produit les routes `/`, `/salle`
+et `/gerant`. Le premier essai d'export a été bloqué par une permission d'écriture sur l'état Expo du profil ;
+il a réussi après redirection d'`EXPO_HOME` vers un répertoire temporaire. Les 7 tests de scénarios S1–S6 passent
+avec l'environnement Python disponible. Les tests HTTP/API n'ont pas terminé et ont été interrompus après blocage.
+Le contrôle manuel post-merge communiqué ensuite confirme `/health` OK sur `:8017` et `/audit/verify` valide sur
+1 459 lignes, sans ligne invalide ni erreur, hash final
+`db8c307ed4b64d776f0d1226bdc4a54054880bc8c0ac48817727ea8b7a4e8268`, journal `v2-integration-test.jsonl`.
+Aucun scénario métier en serveur ni audit/checkpoint de démo n'a été modifié pendant le smoke test.
 Le retest live documenté ci-dessous concerne le front v1.
 
 **Retest manuel front/back v1 (24/10/2026, mode live) :** connexion FastAPI et flux SSE actifs ; S1 exécuté ;
