@@ -165,10 +165,13 @@ déclencher qu'une **quarantaine d'agent** ; seul l'humain peut couper globaleme
 [managent-2-architecture-technique.drawio](./managent-2-architecture-technique.drawio) répond à la question :
 **qu'est-ce qu'on code, et où ?**
 
-- **Clients :** `dashboard.html` (tour de contrôle) et `approval.html` (carte HITL), tous deux en HTML/CSS/JS statique,
-  plus la CLI `run_demo.py` en plan B. Le dashboard utilise le simulateur local par défaut ; `?mode=live` active
-  `LiveTransport` vers FastAPI et SSE. La carte HITL utilise `?mode=live` pour charger les demandes en attente et
-  envoyer la décision de démonstration avec PIN.
+- **Clients :** front v2 Expo / React Native Web (`src/front`) pour la tour de contrôle et l'écran du gérant ;
+  front HTML/JS v1 (`src/api/static`) conservé et servi par FastAPI. Le simulateur v2 est le mode par défaut.
+  `EXPO_PUBLIC_MANAGENT_API` active le transport live v2 sur Expo Web. La liaison REST/SSE et l'approbation HITL
+  par PIN sont intégrées. Au 24/10/2026, `npm ci` et le typecheck Expo sont validés ; Expo Web démarre avec
+  l'URL FastAPI configurée. La validation dans le navigateur, S1/S2/HITL et l'audit final du v2 restent à faire.
+  Le parcours live S1/S2 déjà retesté concerne le v1. La cible native reste en simulation tant qu'un transport
+  SSE natif n'est pas disponible. La CLI `run_demo.py` est le plan B côté back.
 - **Un seul processus Python** lancé par uvicorn : l'API FastAPI, puis le **StateGraph LangGraph** à
   12 nœuds, avec les nœuds agents en bleu et les nœuds de contrôle en vert.
   - Ligne 1 : `START → firewall → proposer → policy_engine → judges ∥ → quorum`.

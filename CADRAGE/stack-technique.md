@@ -38,12 +38,13 @@ et `hash` sur chaque ligne.
 ## Front-end
 | Outil | Rôle | Statut |
 | --- | --- | --- |
-| **HTML/CSS/JavaScript statique** | Implémentation actuelle de la tour de contrôle et de la carte HITL ; simulateur local par défaut, transport REST/SSE avec `?mode=live` | Démo actuelle |
-| **React Native** (+ Expo, React Native Web) | Cible envisagée pour une base de code commune entre la tour de contrôle web et la carte d'approbation mobile | Cible, hors chemin critique hackathon |
+| **React Native** (+ Expo, React Native Web) | Front v2 actuel dans `src/front` ; simulateur par défaut, transport REST/SSE via `EXPO_PUBLIC_MANAGENT_API` sur Expo Web | `npm ci` et typecheck validés le 24/10/2026 ; validation navigateur live S1/S2 à faire |
+| **HTML/CSS/JavaScript statique** | Front v1 servi par FastAPI dans `src/api/static` ; parcours live S1/S2 retesté manuellement le 24/10/2026 | Référence live éprouvée |
 
 Écrans : fil de discussion des agents, alertes, scores de confiance, timeline rejouable, carte
-**Approuver / Rejeter / Rapport**. Le front live consomme l'API REST et le flux SSE, avec les types dérivés des
-contrats JSON de l'API FastAPI. Le parcours PIN est réservé à la démonstration locale.
+**Approuver / Rejeter / Rapport**. Le front v2 web charge l'état et l'audit par REST, suit les événements par SSE
+et transmet la décision HITL avec le PIN à l'API, qui crée la signature. L'origine Expo Web est autorisée par CORS
+pour le développement local. La cible native reste en simulation ; elle nécessitera un transport SSE compatible.
 
 ## Qualité et arbitrages
 - **pytest** (un test par invariant et par scénario S1 à S6), **Ruff** et **mypy** (style, typage strict).

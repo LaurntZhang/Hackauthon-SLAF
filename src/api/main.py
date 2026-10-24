@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import os
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -39,6 +41,18 @@ def create_app(system: FinGuardSystem | None = None) -> FastAPI:
             "Plan de contrôle déterministe entre agents IA et marché simulé."
         ),
         lifespan=lifespan,
+    )
+    configured_origins = [
+        origin.strip()
+        for origin in os.getenv("FINGUARD_CORS_ORIGINS", "").split(",")
+        if origin.strip()
+    ]
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=configured_origins,
+        allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1):\d+$",
+        allow_methods=["GET", "POST"],
+        allow_headers=["Content-Type", "Last-Event-ID"],
     )
     app.state.system = system
     register_error_handlers(app)

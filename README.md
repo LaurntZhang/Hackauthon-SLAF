@@ -40,7 +40,8 @@ chiffrées et données synthétiques. Le marché est simulé.
 | [CADRAGE/managent-use-cases.drawio](../CADRAGE/managent-use-cases.drawio) | Cas d'utilisation du fonds Alpha |
 | [CADRAGE/solution-managent-synthese.md](../CADRAGE/solution-managent-synthese.md) | Synthèse d'une page |
 
-**Stack prévue :** Python 3.13 · LangGraph · Pydantic v2 · FastAPI + SSE · pytest · Langfuse (optionnel).
+**Stack :** front Expo / React Native / React Native Web (`src/front`) ; back Python 3.13 · LangGraph · Pydantic v2 ·
+FastAPI + SSE · pytest · Langfuse (optionnel). Le front HTML v1 reste servi par FastAPI.
 
 ## Contrat de données partagé
 
@@ -82,15 +83,43 @@ démonstration `1234` par défaut, configurable avec
 `FINGUARD_DEMO_PIN`. Ce parcours est réservé à la démo locale : il ne constitue pas une authentification
 adaptée à la production. Le mode démonstration fonctionne sans réseau ni clé API (`FINGUARD_LLM=off` par défaut).
 
-**Retest manuel front/back (24/10/2026, mode live) :** connexion FastAPI et flux SSE actifs ; S1 exécuté ;
-S2 affiché sur le dashboard et la carte HITL, approuvé par PIN puis exécuté. Le contrôle d'audit a indiqué
-une chaîne intègre de 220 événements, sans rejet. Les tests automatisés n'ont pas été relancés pendant ce retest.
+Pour lancer le front Expo v2 sur le web, dans un second terminal :
+
+```powershell
+cd src/front
+npm ci
+$env:EXPO_PUBLIC_MANAGENT_API = "http://127.0.0.1:8000" # omettre pour rester en simulation
+npm run web
+```
+
+Le transport live v2 utilise REST et SSE. Le mode live est pris en charge sur Expo Web ; la cible native reste en
+simulation tant qu'un transport SSE natif n'est pas ajouté. Pour un front servi sur une autre origine, définir
+`FINGUARD_CORS_ORIGINS` avec une liste d'origines autorisées séparées par des virgules.
+
+**Validation front v2 (24/10/2026) :**
+
+- **Vérifié :** `npm ci` réussi depuis `package-lock.json` sous Node 24.22.1 (minimum Expo SDK 58 : Node 22.13.x) ;
+  `npm run typecheck` passe après ajout de `setConnection()` au contrat `Store`. L'API existante répond HTTP 200
+  sur `/health` ; son audit initial est valide sur 220 lignes. Expo Web démarre avec
+  `EXPO_PUBLIC_MANAGENT_API=http://127.0.0.1:8000` sur `http://localhost:8081`.
+- **À vérifier :** dans le navigateur, le chargement REST côté v2, la connexion et la réception SSE, S1, S2/HITL,
+  l'état final rendu, les rejets d'événements et `/audit/verify` après scénarios. Ces étapes n'ont pas été exécutées
+  dans ce retest ; l'audit reste donc au baseline de 220 lignes.
+- **Lint :** `expo lint` reste non validé ; faute de configuration ESLint, Expo CLI a proposé d'ajouter ESLint et
+  `eslint-config-expo`. Cette installation automatique a été interrompue pour conserver le manifeste et le lockfile.
+
+Le retest live documenté ci-dessous concerne le front v1.
+
+**Retest manuel front/back v1 (24/10/2026, mode live) :** connexion FastAPI et flux SSE actifs ; S1 exécuté ;
+S2 affiché sur le dashboard et la carte HITL, approuvé par PIN puis exécuté. Le contrôle d'audit a indiqué une
+chaîne intègre de 220 événements, sans rejet. Les tests automatisés n'ont pas été relancés pendant ce retest.
 
 | Variable | Défaut | Rôle |
 | --- | --- | --- |
 | `FINGUARD_HITL_SECRET` | secret de démo (alerte au démarrage) | clé HMAC des approbations et commandes d'opérateur |
 | `FINGUARD_AUDIT_PATH` | `logs/audit.jsonl` | journal d'audit chaîné |
 | `FINGUARD_CHECKPOINT_DB` | `data/checkpoints.sqlite` (`memory` possible) | checkpoints LangGraph pour la reprise HITL |
+| `FINGUARD_CORS_ORIGINS` | origines locales Expo Web | origines additionnelles autorisées pour l'API navigateur |
 | `FINGUARD_LLM` / `FINGUARD_LLM_MODEL` | `off` / `openai:gpt-4.1-mini` | agents LLM optionnels (`uv sync --extra llm`) |
 | `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` | absentes | export Langfuse optionnel (`uv sync --extra langfuse`) |
 
