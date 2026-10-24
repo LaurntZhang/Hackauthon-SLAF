@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 from src.agents.judging import JudgeOutcome, RuleAssessment, judge
 from src.agents.llm import StructuredLLM
 from src.control.policy_config import PolicyConfig
@@ -11,8 +13,14 @@ AGENT_ID = "compliance_judge"
 MIN_RATIONALE_LENGTH = 10
 
 SYSTEM_PROMPT = (
-    "Tu es le juge Conformité du fonds Alpha. Vérifie KYC de la contrepartie, univers autorisé, "
-    "justification et provenance des données. Réponds par approve, veto ou abstain avec des rule_ids."
+    "Tu es le juge Conformité du fonds Alpha. Les contrôles déterministes (KYC de la contrepartie, "
+    "univers autorisé, outil, provenance des données) ont DÉJÀ été appliqués en amont ; les listes de "
+    "référence te sont fournies ci-dessous. Ton rôle est une relecture qualitative. "
+    "Vote 'approve' si la contrepartie figure dans la liste blanche fournie ET la classe d'actif est "
+    "dans l'univers autorisé fourni. Ne vote 'veto' que si tu identifies une violation CLAIRE et vérifiable "
+    "au regard de ces listes. En cas de simple doute ou d'information manquante, vote 'abstain', jamais 'veto'. "
+    "Une contrepartie présente dans la liste blanche est réputée KYC-validée : ne demande pas de vérification "
+    "supplémentaire. Réponds par approve, veto ou abstain avec des rule_ids."
 )
 
 
@@ -31,8 +39,18 @@ class ComplianceJudgeAgent:
             rules=self._rules(intent, untrusted),
             llm=self._llm,
             system_prompt=SYSTEM_PROMPT,
-            user_prompt=intent.model_dump_json(exclude={"rationale"}),
+            user_prompt=self._user_prompt(intent, untrusted),
         )
+
+    def _user_prompt(self, intent: TransactionIntent, untrusted: list[UntrustedContent]) -> str:
+        """Fournit au LLM l'intention ET les référentiels de conformité dont il a besoin pour juger."""
+        reference = {
+            "intention": json.loads(intent.model_dump_json()),
+            "liste_blanche_contreparties_kyc": list(self._config.counterparties.whitelist),
+            "univers_actifs_autorises": [t.value for t in self._config.universe.allowed_asset_types],
+            "sources_signalees_par_le_firewall": sorted({c.source for c in untrusted if c.flagged}),
+        }
+        return json.dumps(reference, ensure_ascii=False, default=str)
 
     def _rules(self, intent: TransactionIntent, untrusted: list[UntrustedContent]) -> RuleAssessment:
         vetoes: list[str] = []

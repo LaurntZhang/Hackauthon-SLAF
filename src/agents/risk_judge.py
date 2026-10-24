@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 from src.agents.judging import JudgeOutcome, RuleAssessment, judge
 from src.agents.llm import StructuredLLM
 from src.control.policy_config import PolicyConfig
@@ -12,8 +14,12 @@ AGENT_ID = "risk_judge"
 MIN_CONFIDENCE = 0.6
 
 SYSTEM_PROMPT = (
-    "Tu es le juge Risque du fonds Alpha (profil prudent). Évalue l'intention : concentration émetteur "
-    "et secteur, taille de position, volatilité. Réponds par approve, veto ou abstain avec des rule_ids."
+    "Tu es le juge Risque du fonds Alpha (profil prudent). Les contrôles chiffrés (concentration émetteur "
+    "et secteur, taille de position, limites) ont DÉJÀ été appliqués en amont ; les expositions et limites "
+    "te sont fournies ci-dessous. Ton rôle est une relecture qualitative du risque. "
+    "Vote 'approve' si les expositions fournies respectent les limites fournies. Ne vote 'veto' que pour une "
+    "violation CLAIRE et chiffrée au regard de ces limites. En cas de doute ou d'information manquante, vote "
+    "'abstain', jamais 'veto'. Réponds par approve, veto ou abstain avec des rule_ids."
 )
 
 
@@ -34,8 +40,27 @@ class RiskJudgeAgent:
             rules=rules,
             llm=self._llm,
             system_prompt=SYSTEM_PROMPT,
-            user_prompt=intent.model_dump_json(exclude={"rationale"}),
+            user_prompt=self._user_prompt(intent),
         )
+
+    def _user_prompt(self, intent: TransactionIntent) -> str:
+        """Fournit au LLM l'intention ET les expositions/limites chiffrées pour juger le risque."""
+        instrument = INSTRUMENTS.get(intent.asset)
+        reference: dict[str, object] = {
+            "intention": json.loads(intent.model_dump_json()),
+            "limites": {
+                "exposition_max_emetteur": f"{self._limits.max_issuer_exposure:.0%}",
+                "exposition_max_secteur": f"{self._limits.max_sector_exposure:.0%}",
+                "montant_max_autonome": str(self._limits.autonomous_max_amount),
+            },
+        }
+        if instrument is not None and instrument.asset_type is not AssetType.CASH:
+            reference["expositions_apres_operation"] = {
+                "emetteur": f"{self._portfolio.issuer_exposure(instrument.issuer, intent.amount):.2%}",
+                "secteur": f"{self._portfolio.sector_exposure(instrument.sector, intent.amount):.2%}",
+                "position_detenue": str(self._portfolio.position(intent.asset)),
+            }
+        return json.dumps(reference, ensure_ascii=False, default=str)
 
     def _rules(self, intent: TransactionIntent) -> RuleAssessment:
         instrument = INSTRUMENTS.get(intent.asset)
