@@ -38,13 +38,16 @@ et `hash` sur chaque ligne.
 ## Front-end
 | Outil | Rôle | Statut |
 | --- | --- | --- |
-| **React Native** (+ Expo, React Native Web) | Front v2 actuel dans `src/front` ; simulateur par défaut, transport REST/SSE via `EXPO_PUBLIC_MANAGENT_API` sur Expo Web | `npm ci` et typecheck validés le 24/10/2026 ; validation navigateur live S1/S2 à faire |
+| **React Native** (+ Expo, React Native Web) | Front v2 actuel dans `src/front` ; simulateur par défaut, transport REST/SSE via `EXPO_PUBLIC_MANAGENT_API` sur Expo Web | Liaison REST/SSE et HITL validés le 24/10/2026 ; diagnostic résolu : le front et les scénarios utilisaient l'API `:8017` (audit valide de 1 444 événements), tandis que la vérification avait consulté l'ancienne API `:8000` (audit valide de 220 événements). Aucun nouveau scénario requis |
 | **HTML/CSS/JavaScript statique** | Front v1 servi par FastAPI dans `src/api/static` ; parcours live S1/S2 retesté manuellement le 24/10/2026 | Référence live éprouvée |
 
 Écrans : fil de discussion des agents, alertes, scores de confiance, timeline rejouable, carte
 **Approuver / Rejeter / Rapport**. Le front v2 web charge l'état et l'audit par REST, suit les événements par SSE
 et transmet la décision HITL avec le PIN à l'API, qui crée la signature. L'origine Expo Web est autorisée par CORS
 pour le développement local. La cible native reste en simulation ; elle nécessitera un transport SSE compatible.
+Les journaux vérifiés le 24/10/2026 sont deux chaînes valides distinctes : l'API `:8000` sert `logs/audit.jsonl`
+(220 événements) et l'API `:8017` sert `.integration-worktree/logs/v2-integration-test.jsonl` (1 444 événements,
+dont les S1/S2 du retest). Consulter les endpoints `/audit/*` sur le port `:8017` pour voir le résultat du parcours v2.
 
 ## Qualité et arbitrages
 - **pytest** (un test par invariant et par scénario S1 à S6), **Ruff** et **mypy** (style, typage strict).

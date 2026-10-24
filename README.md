@@ -99,12 +99,22 @@ simulation tant qu'un transport SSE natif n'est pas ajouté. Pour un front servi
 **Validation front v2 (24/10/2026) :**
 
 - **Vérifié :** `npm ci` réussi depuis `package-lock.json` sous Node 24.22.1 (minimum Expo SDK 58 : Node 22.13.x) ;
-  `npm run typecheck` passe après ajout de `setConnection()` au contrat `Store`. L'API existante répond HTTP 200
-  sur `/health` ; son audit initial est valide sur 220 lignes. Expo Web démarre avec
-  `EXPO_PUBLIC_MANAGENT_API=http://127.0.0.1:8000` sur `http://localhost:8081`.
-- **À vérifier :** dans le navigateur, le chargement REST côté v2, la connexion et la réception SSE, S1, S2/HITL,
-  l'état final rendu, les rejets d'événements et `/audit/verify` après scénarios. Ces étapes n'ont pas été exécutées
-  dans ce retest ; l'audit reste donc au baseline de 220 lignes.
+  `npm run typecheck` passe après ajout de `setConnection()` au contrat `Store`. L'API répond sur `/health` ; Expo Web
+  démarre avec `EXPO_PUBLIC_MANAGENT_API=http://127.0.0.1:8017` sur `http://localhost:8081`. Dans le navigateur,
+  le mode indique `API live · connecté` et le flux `GET /events` est indiqué connecté. S1 apparaît exécuté ; le
+  compteur affiché passe de 1 412 à 1 427 événements, avec zéro rejet du contrat AuditEvent. S2 affiche la demande
+  HITL sur le dashboard et `/gerant` ; l'approbation par PIN 1234 est signée, le traitement reprend et l'interface
+  montre l'opération de 85 000 € exécutée. Le compteur affiché atteint 1 444 événements.
+- **Cause vérifiée (24/10/2026) :** deux API locales répondaient sur des ports différents. `127.0.0.1:8000` sert
+  le journal par défaut `logs/audit.jsonl` : 220 événements valides, dernier dossier `cor-947ba37fa7d1`, hash final
+  `67c46e1b3b5ea46bb49238c14733726ad08848529bd0f5078152c3ec4b995888`. `127.0.0.1:8017`, lancé depuis
+  `.integration-worktree`, sert `logs/v2-integration-test.jsonl` : 1 444 événements valides, dont S1
+  `cor-1df4d7dedf08` (séquences 1413–1427) et S2 `cor-9ba191447c6f` (1428–1444), hash final
+  `d04941bb452597c8a411aa2dd72dd3ac0cef6bb32d18a126b9e566cd26550b12`. Le contrôle avait été fait sur le port
+  8000 tandis que le front v2 utilisait le port 8017. Les deux chaînes sont intègres ; aucun défaut de code ni de
+  persistance n'est constaté.
+- **Résultat :** écart résolu en consultant le même port que le front (`8017`). Les deux chaînes sont valides ;
+  aucun nouveau scénario n'est nécessaire.
 - **Lint :** `expo lint` reste non validé ; faute de configuration ESLint, Expo CLI a proposé d'ajouter ESLint et
   `eslint-config-expo`. Cette installation automatique a été interrompue pour conserver le manifeste et le lockfile.
 
