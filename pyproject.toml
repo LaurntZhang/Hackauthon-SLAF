@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-llm = ["langchain>=1.0"]
+llm = ["langchain>=1.0", "langchain-mistralai>=0.2"]
 langfuse = ["langfuse>=3.0"]
 
 [dependency-groups]

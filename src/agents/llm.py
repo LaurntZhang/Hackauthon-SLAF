@@ -11,7 +11,7 @@ from pydantic import BaseModel, ValidationError
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_MODEL = "openai:gpt-4.1-mini"
+DEFAULT_MODEL = "mistral:mistral-small-latest"
 
 
 class LLMUnavailableError(Exception):

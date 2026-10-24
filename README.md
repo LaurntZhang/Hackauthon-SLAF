@@ -68,7 +68,7 @@ Six scénarios, chacun associé à un test (détail dans le cadrage, §9) :
 Prérequis : Python 3.13 et [uv](https://docs.astral.sh/uv/).
 
 ```bash
-uv sync                                   # crée .venv et installe les dépendances
+uv sync --extra llm                        # crée .venv et installe aussi l'intégration Mistral
 uv run pytest -q                          # 146 tests : invariants, scénarios S1 à S6, API
 uv run python -m scripts.run_demo         # plan B : S1 à S6 en CLI, hors ligne
 uv run uvicorn src.api.main:app --reload  # interface sur :8000, API sur :8000/docs
@@ -130,7 +130,8 @@ chaîne intègre de 220 événements, sans rejet. Les tests automatisés n'ont p
 | `FINGUARD_AUDIT_PATH` | `logs/audit.jsonl` | journal d'audit chaîné |
 | `FINGUARD_CHECKPOINT_DB` | `data/checkpoints.sqlite` (`memory` possible) | checkpoints LangGraph pour la reprise HITL |
 | `FINGUARD_CORS_ORIGINS` | origines locales Expo Web | origines additionnelles autorisées pour l'API navigateur |
-| `FINGUARD_LLM` / `FINGUARD_LLM_MODEL` | `off` / `openai:gpt-4.1-mini` | agents LLM optionnels (`uv sync --extra llm`) |
+| `FINGUARD_LLM` / `FINGUARD_LLM_MODEL` | `off` / `mistral:mistral-small-latest` | agents LLM Mistral optionnels (`uv sync --extra llm`) |
+| `MISTRAL_API_KEY` | absente | clé API Mistral si `FINGUARD_LLM=on` |
 | `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` | absentes | export Langfuse optionnel (`uv sync --extra langfuse`) |
 
 Signer une approbation pour curl ou le front :

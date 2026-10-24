@@ -3,6 +3,7 @@
  * Décoratives : le sens est toujours porté par un texte visible ou un accessibilityLabel.
  */
 import { memo } from 'react';
+import { Platform } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 const PATHS = {
@@ -69,7 +70,11 @@ function IconBase({ name, size = 18, color, strokeWidth = 1.8 }: Props) {
   const xml =
     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${strokeWidth}" ` +
     `stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;
-  return <SvgXml xml={xml} width={size} height={size} color={color} accessible={false} importantForAccessibility="no-hide-descendants" />;
+  const decorativeAccessibility =
+    Platform.OS === 'web'
+      ? {}
+      : { accessible: false, importantForAccessibility: 'no-hide-descendants' as const };
+  return <SvgXml {...decorativeAccessibility} xml={xml} width={size} height={size} color={color} />;
 }
 
 export const Icon = memo(IconBase);
