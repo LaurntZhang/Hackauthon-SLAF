@@ -165,7 +165,10 @@ déclencher qu'une **quarantaine d'agent** ; seul l'humain peut couper globaleme
 [managent-2-architecture-technique.drawio](./managent-2-architecture-technique.drawio) répond à la question :
 **qu'est-ce qu'on code, et où ?**
 
-- **Clients :** `dashboard.html` (tour de contrôle), carte d'approbation mobile, et CLI `run_demo.py` en plan B.
+- **Clients :** `dashboard.html` (tour de contrôle) et `approval.html` (carte HITL), tous deux en HTML/CSS/JS statique,
+  plus la CLI `run_demo.py` en plan B. Le dashboard utilise le simulateur local par défaut ; `?mode=live` active
+  `LiveTransport` vers FastAPI et SSE. La carte HITL utilise `?mode=live` pour charger les demandes en attente et
+  envoyer la décision de démonstration avec PIN.
 - **Un seul processus Python** lancé par uvicorn : l'API FastAPI, puis le **StateGraph LangGraph** à
   12 nœuds, avec les nœuds agents en bleu et les nœuds de contrôle en vert.
   - Ligne 1 : `START → firewall → proposer → policy_engine → judges ∥ → quorum`.
@@ -213,13 +216,21 @@ human_decision, authorization, order, report, status, reason, audit_trail (opera
 | Méthode | Route | Rôle |
 | --- | --- | --- |
 | POST | `/transactions` | soumettre un objectif ou une transaction → `thread_id`, statut |
+| GET | `/transactions/{thread_id}` | consulter l'état courant d'une transaction |
+| GET | `/approvals` | lister les décisions humaines en attente |
+| GET | `/approvals/{thread_id}` | consulter une demande HITL en attente |
 | POST | `/approvals/{thread_id}` | `HumanDecision` signée → reprise par `Command(resume)` |
+| POST | `/approvals/{thread_id}/demo` | approbation ou rejet par PIN de démonstration, signature créée côté serveur |
+| GET | `/controls/state` | lire l'état du kill switch, du circuit breaker et des mandats |
 | POST | `/kill-switch` | arrêt ou réarmement (global ou `agent_id`) |
+| GET | `/scenarios` | lister les scénarios disponibles |
 | POST | `/scenarios/{name}` | lancer un scénario adverse |
-| GET | `/events` | flux SSE des `AuditEvent` |
+| GET | `/events` | flux SSE des `AuditEvent` (rejeu disponible) |
+| GET | `/audit/events` | lire les événements d'audit pour la timeline |
 | GET | `/audit/verify` | résultat de `verify_chain()` |
 | GET | `/decisions/{correlation_id}` | fiche XAI |
-| GET | `/` | `dashboard.html` |
+| GET | `/` | servir la tour de contrôle (`dashboard.html`) |
+| GET | `/approval.html` | servir la carte HITL |
 
 ---
 

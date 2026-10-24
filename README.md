@@ -74,10 +74,17 @@ uv run uvicorn src.api.main:app --reload  # interface sur :8000, API sur :8000/d
 ```
 
 Ouvrir `http://127.0.0.1:8000` affiche la tour de contrôle en simulation locale. Ajouter `?mode=live`
-pour la connecter à FastAPI ; la page mobile est disponible sur `/approval.html`. Les approbations et
-commandes signées utilisent le PIN de démonstration `1234` par défaut, configurable avec
+active le transport FastAPI : lancement des scénarios et transactions par REST, chargement de l'état,
+des approbations en attente et de l'audit, puis réception des événements par SSE. La carte HITL est
+disponible sur `/approval.html?mode=live` ; elle charge les demandes en attente et transmet la décision
+signée par le serveur après saisie du PIN. Les approbations et commandes signées utilisent le PIN de
+démonstration `1234` par défaut, configurable avec
 `FINGUARD_DEMO_PIN`. Ce parcours est réservé à la démo locale : il ne constitue pas une authentification
 adaptée à la production. Le mode démonstration fonctionne sans réseau ni clé API (`FINGUARD_LLM=off` par défaut).
+
+**Retest manuel front/back (24/10/2026, mode live) :** connexion FastAPI et flux SSE actifs ; S1 exécuté ;
+S2 affiché sur le dashboard et la carte HITL, approuvé par PIN puis exécuté. Le contrôle d'audit a indiqué
+une chaîne intègre de 220 événements, sans rejet. Les tests automatisés n'ont pas été relancés pendant ce retest.
 
 | Variable | Défaut | Rôle |
 | --- | --- | --- |

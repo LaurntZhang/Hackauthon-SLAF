@@ -38,11 +38,12 @@ et `hash` sur chaque ligne.
 ## Front-end
 | Outil | Rôle | Statut |
 | --- | --- | --- |
-| **React Native** (+ Expo, React Native Web) | Une seule base de code pour la tour de contrôle (web) et la carte d'approbation (mobile) | Cœur |
+| **HTML/CSS/JavaScript statique** | Implémentation actuelle de la tour de contrôle et de la carte HITL ; simulateur local par défaut, transport REST/SSE avec `?mode=live` | Démo actuelle |
+| **React Native** (+ Expo, React Native Web) | Cible envisagée pour une base de code commune entre la tour de contrôle web et la carte d'approbation mobile | Cible, hors chemin critique hackathon |
 
 Écrans : fil de discussion des agents, alertes, scores de confiance, timeline rejouable, carte
-**Approuver / Rejeter / Rapport**. Le front consomme uniquement l'API et le flux SSE, avec les types dérivés des
-contrats Pydantic (OpenAPI).
+**Approuver / Rejeter / Rapport**. Le front live consomme l'API REST et le flux SSE, avec les types dérivés des
+contrats JSON de l'API FastAPI. Le parcours PIN est réservé à la démonstration locale.
 
 ## Qualité et arbitrages
 - **pytest** (un test par invariant et par scénario S1 à S6), **Ruff** et **mypy** (style, typage strict).
