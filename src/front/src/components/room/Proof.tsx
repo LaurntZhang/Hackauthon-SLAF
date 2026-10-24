@@ -69,10 +69,7 @@ function ProofStrip({ tx }: { tx: Tx | null }) {
           <Text style={[styles.strong, { color: s.tone === 'block' ? colors.block : colors.text }]}>{s.title}</Text>
           <Text style={[styles.small, { color: colors.text2 }]}>{s.text}</Text>
         </View>
-        <View style={styles.row}>
-          <Button label="Vérifier maintenant" icon="link" size="sm" disabled={!n} onPress={app.verifyAndAnnounce} />
-          <Button label="Voir le journal" icon="listChecks" size="sm" variant="ghost" onPress={() => app.setTab('audit')} />
-        </View>
+
       </View>
       {n ? (
         <View style={{ gap: 6 }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
@@ -411,35 +408,23 @@ function Journal({ wide }: { wide: boolean }) {
   );
 }
 
-export function ProofAudit({ tx, wide }: { tx: Tx | null; wide: boolean }) {
-  const { colors } = useTheme();
-  const { ui } = app.useApp();
-  const tabs: ['feed' | 'audit', string][] = [
-    ['feed', 'Récit des décisions'],
-    ['audit', `Journal de preuve · ${store.events.length}`],
-  ];
+/** Onglet « Récit » : bilan de la séance et fil des décisions, séquence par séquence. */
+export function RecitTab() {
   return (
     <View style={{ gap: space.s4 }}>
-      <SectionHead num="04" title="Preuve et audit" right={<Kpis />} />
+      <SectionHead title="Récit des décisions" hint="Qui a proposé, qui a contrôlé, qui a décidé et pourquoi. Les vérifications techniques restent repliées." right={<Kpis />} />
+      <Feed />
+    </View>
+  );
+}
+
+/** Onglet « Journal de preuve » : chaîne d'empreintes, vérification, tableau des événements. */
+export function JournalTab({ tx, wide }: { tx: Tx | null; wide: boolean }) {
+  return (
+    <View style={{ gap: space.s4 }}>
+      <SectionHead title="Journal de preuve" hint="AI Act art. 12 · journalisation chaînée : chaque événement porte l'empreinte du précédent." />
       <ProofStrip tx={tx} />
-      <View style={[styles.tabs, { borderBottomColor: colors.border }]} accessibilityRole="tablist">
-        {tabs.map(([id, label]) => {
-          const active = ui.tab === id;
-          return (
-            <Pressable
-              key={id}
-              accessibilityRole="tab"
-              accessibilityState={{ selected: active }}
-              onPress={() => app.setTab(id)}
-              style={(state: any) => [styles.tab, { borderBottomColor: active ? colors.text : 'transparent', backgroundColor: state.hovered ? colors.surface2 : 'transparent' }]}
-            >
-              <Text style={[styles.tabText, { color: active ? colors.text : colors.text2, fontFamily: active ? fonts.sansSemi : fonts.sansMedium }]}>{label}</Text>
-            </Pressable>
-          );
-        })}
-        <Text style={[styles.xs, { color: colors.muted, marginLeft: 'auto' }]}>AI Act art. 12 · journalisation chaînée</Text>
-      </View>
-      {ui.tab === 'feed' ? <Feed /> : <Journal wide={wide} />}
+      <Journal wide={wide} />
     </View>
   );
 }
@@ -460,9 +445,6 @@ const styles = StyleSheet.create({
   cells: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 4 },
   cell: { width: 14, height: 10, borderWidth: 1, borderRadius: 2 },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  tabs: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', borderBottomWidth: 1, gap: space.s2 },
-  tab: { paddingHorizontal: space.s3, minHeight: 44, justifyContent: 'center', borderBottomWidth: 2, marginBottom: -1 },
-  tabText: { fontSize: fs.sm + 0.5 },
   empty: { borderWidth: 1, borderStyle: 'dashed', borderRadius: radius.md, padding: space.s6, alignItems: 'center', gap: space.s3 },
   run: { borderTopWidth: 1, paddingTop: space.s3, gap: space.s3 },
   runHead: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: space.s3 },
@@ -476,7 +458,7 @@ const styles = StyleSheet.create({
   avatar: { width: 32, height: 32, borderRadius: 16, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
   msgMeta: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', columnGap: space.s2, rowGap: 2 },
   tag: { borderRadius: 3, paddingHorizontal: 5, paddingVertical: 1 },
-  tagText: { fontFamily: fonts.sansSemi, fontSize: 11, letterSpacing: 0.4 },
+  tagText: { fontFamily: fonts.sansSemi, fontSize: 12, letterSpacing: 0.4 },
   rule: { fontFamily: fonts.mono, fontSize: fs.xs, borderWidth: 1, borderRadius: 3, paddingHorizontal: 5, paddingVertical: 1 },
   micro: { borderTopWidth: 1, paddingTop: space.s2, gap: 4 },
   microToggle: { flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 36 },

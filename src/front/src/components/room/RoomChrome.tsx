@@ -61,9 +61,30 @@ export function RoomHeader() {
     ['MODE', transport.mode === 'live' ? `API live · ${store.connection || 'connexion…'}` : 'Simulation locale · hors ligne'],
     ['SÉANCE', st.label, st.tone],
   ];
+  // Mobile : deux lignes seulement (marque + réglages, puis preuve + arrêt d'urgence).
+  // L'état de la séance est porté par les indicateurs des onglets.
+  if (width < 600) {
+    return (
+      <View style={[styles.topNarrow, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
+        <View style={styles.narrowRow}>
+          <Brand subtitle="Salle de contrôle" />
+          <View style={[styles.narrowRow, { marginLeft: 'auto' }]}>
+            <IconButton icon="eye" label="Mode jury" onPress={() => router.push('/')} />
+            <ThemeToggle compact />
+          </View>
+        </View>
+        <View style={styles.narrowRow}>
+          <View style={{ flex: 1, minWidth: 0 }}>
+            <ProofPill />
+          </View>
+          <Button label={kill ? 'Réarmer' : "Arrêt d'urgence"} accessibilityLabel={kill ? "Réarmer l'exécution" : "Arrêt d'urgence"} icon="power" size="sm" variant={kill ? 'danger' : 'dangerOutline'} disabled={Boolean(ui.replay)} onPress={app.toggleKill} />
+        </View>
+      </View>
+    );
+  }
   return (
-    <View style={[styles.top, { backgroundColor: colors.surface, borderBottomColor: colors.border }, width < 600 && { paddingHorizontal: space.s4 }]}>
-      <Brand subtitle={width < 600 ? 'Salle de contrôle' : 'Gouverner les agents IA, garder la main'} />
+    <View style={[styles.top, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
+      <Brand subtitle="Gouverner les agents IA, garder la main" />
       {compact ? null : (
         <View style={styles.context} accessibilityLabel="Contexte de la démonstration">
           {ctx.map(([label, value, tone]) => (
@@ -120,7 +141,8 @@ export function RoomBanners() {
   }
   if (ui.error) parts.push(<Notice key="error" tone="block" icon="alert" text={ui.error} />);
   if (!parts.length) return null;
-  return <View style={{ gap: space.s2 }}>{parts}</View>;
+  // Bandeaux hors onglets : une décision en attente ou un arrêt d'urgence restent visibles partout.
+  return <View style={{ gap: space.s2, paddingHorizontal: space.s4, paddingTop: space.s3 }}>{parts}</View>;
 }
 
 const CHARTER: { icon: IconName; verb: string; text: string; core?: boolean }[] = [
@@ -184,9 +206,11 @@ const styles = StyleSheet.create({
   top: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: space.s4, paddingHorizontal: space.s5, paddingVertical: space.s3, borderBottomWidth: 1 },
   context: { flexDirection: 'row', gap: space.s4, flex: 1, justifyContent: 'center' },
   ctxItem: { borderLeftWidth: 1, paddingLeft: space.s4, gap: 1 },
-  ctxLabel: { fontFamily: fonts.sansSemi, fontSize: 11, letterSpacing: 0.7 },
+  ctxLabel: { fontFamily: fonts.sansSemi, fontSize: 12, letterSpacing: 0.7 },
   actions: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: space.s2, marginLeft: 'auto' },
   compactCtx: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: space.s3, width: '100%' },
+  topNarrow: { paddingHorizontal: space.s4, paddingVertical: space.s2, gap: space.s2, borderBottomWidth: 1 },
+  narrowRow: { flexDirection: 'row', alignItems: 'center', gap: space.s2 },
   pill: { flexDirection: 'row', alignItems: 'center', gap: 6, borderWidth: 1, borderRadius: radius.md, paddingHorizontal: space.s3, minHeight: 40, flexShrink: 1 },
   small: { fontFamily: fonts.sans, fontSize: fs.sm, lineHeight: 19 },
   xs: { fontFamily: fonts.sans, fontSize: fs.xs, lineHeight: 17 },

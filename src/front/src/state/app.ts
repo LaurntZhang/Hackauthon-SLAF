@@ -13,6 +13,7 @@ export type Drawer = { type: 'journal' } | { type: 'step'; id: StepId } | null;
 export type Confirm = { title: string; text: string; ok: string; danger?: boolean; resolve: (ok: boolean) => void } | null;
 export type Issue = { code: string; message: string };
 export type RemotePending = { card: HitlCardData; record: any } | null;
+export type RoomTab = 'operation' | 'feed' | 'audit' | 'system' | 'cases';
 
 export type UiState = {
   running: string | null;
@@ -37,7 +38,8 @@ export type UiState = {
   // ---- salle de contrôle
   /** Dossier consulté (sinon : suivi du dernier dossier). */
   roomCorr: string | null;
-  tab: 'feed' | 'audit';
+  /** Onglet de la salle de contrôle. */
+  tab: RoomTab;
   selectedLine: number | null;
   xaiCorr: string | null;
   openDetails: string[];
@@ -47,7 +49,7 @@ export type UiState = {
 let ui: UiState = {
   issuesKey: null,
   roomCorr: null,
-  tab: 'feed',
+  tab: 'operation',
   selectedLine: null,
   xaiCorr: null,
   openDetails: [],
@@ -259,7 +261,8 @@ export async function runScenario(key: string) {
   const scenario = C.SCENARIOS.find((s: { key: string }) => s.key === key);
   if (!scenario) return;
   const meta = MENU.find((m) => m.key === key);
-  set({ issues: [], issuesKey: null, running: key, menuOpen: false, input: '', inputError: null, roomCorr: null, tab: key === 'audit_tamper' ? 'audit' : 'feed' });
+  // Lancer un cas amène sur l'onglet où il se joue : l'opération, ou le journal pour la falsification.
+  set({ issues: [], issuesKey: null, running: key, menuOpen: false, input: '', inputError: null, roomCorr: null, tab: key === 'audit_tamper' ? 'audit' : 'operation' });
   announce(`Scénario lancé : ${meta ? meta.title : scenario.title}.`);
   try {
     await transport.runScenario(key);
@@ -344,7 +347,7 @@ export async function resetDemo() {
   if (ui.replay) stopReplay();
   set({
     phoneOpen: false, drawer: null, issues: [], issuesKey: null, pinned: false, selected: null, input: '',
-    roomCorr: null, selectedLine: null, xaiCorr: null, openDetails: [], tab: 'feed',
+    roomCorr: null, selectedLine: null, xaiCorr: null, openDetails: [], tab: 'operation',
   });
   await guard(transport.reset());
   broadcast({ type: 'idle' });
@@ -526,8 +529,10 @@ export function roomTx() {
   return corr ? store.txs.get(corr) || null : null;
 }
 
+/** Affiche un dossier (ou revient au suivi en direct) : toujours dans l'onglet Opération. */
 export function pinDossier(corr: string | null) {
-  set({ roomCorr: corr });
+  set({ roomCorr: corr, tab: 'operation' });
+  if (corr) announce(`Dossier ${corr} affiché dans l'onglet Opération.`);
 }
 
 export function setTab(tab: UiState['tab']) {
@@ -563,7 +568,7 @@ export async function submitComposer() {
     announce(error);
     return;
   }
-  set({ running: 'manual', roomCorr: null, tab: 'feed', composer: { ...c, error: null } });
+  set({ running: 'manual', roomCorr: null, tab: 'operation', composer: { ...c, error: null } });
   try {
     await transport.submitObjective({ asset: c.asset, side: c.side, amount, counterparty: c.counterparty });
   } catch (err) {

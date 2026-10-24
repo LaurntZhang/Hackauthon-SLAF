@@ -162,7 +162,7 @@ function Supervisor() {
 export function SystemUnderControl({ columns }: { columns: number }) {
   return (
     <View style={{ gap: space.s4 }}>
-      <SectionHead num="05" title="Le système sous contrôle" hint="Ce que chaque agent a le droit de faire, les limites du jour et ce que le superviseur a remarqué." />
+      <SectionHead title="Le système sous contrôle" hint="Ce que chaque agent a le droit de faire, les limites du jour et ce que le superviseur a remarqué." />
       <View style={[styles.grid, columns === 1 && { flexDirection: 'column' }]}>
         <View style={styles.col}>
           <Agents />

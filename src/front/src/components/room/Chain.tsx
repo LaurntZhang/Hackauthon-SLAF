@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   link: { flex: 1, height: 2, marginLeft: space.s2 },
   num: { fontFamily: fonts.monoMedium, fontSize: fs.xs },
   name: { fontFamily: fonts.sansSemi, fontSize: fs.md - 0.5, lineHeight: 20 },
-  actor: { fontFamily: fonts.sansSemi, fontSize: fs.xs - 1, letterSpacing: 0.6, marginBottom: 2 },
+  actor: { fontFamily: fonts.sansSemi, fontSize: 12, letterSpacing: 0.6, marginBottom: 2 },
   why: { fontFamily: fonts.sans, fontSize: fs.xs, lineHeight: 17 },
   legend: { flexDirection: 'row', flexWrap: 'wrap', columnGap: space.s5, rowGap: space.s2 },
 });

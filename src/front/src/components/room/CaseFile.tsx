@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   asset: { fontFamily: fonts.serif, fontSize: fs.md + 1 },
   facts: { flexDirection: 'row', flexWrap: 'wrap', borderTopWidth: 1 },
   fact: { flexBasis: '50%', flexGrow: 1, minWidth: 200, paddingVertical: space.s3, paddingRight: space.s3, gap: 4, borderBottomWidth: 1 },
-  factLabel: { fontFamily: fonts.sansSemi, fontSize: fs.xs - 1, letterSpacing: 0.6 },
+  factLabel: { fontFamily: fonts.sansSemi, fontSize: 12, letterSpacing: 0.6 },
   factValue: { fontFamily: fonts.sansMedium, fontSize: fs.md },
   note: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   noteText: { fontFamily: fonts.sans, fontSize: fs.xs, lineHeight: 17, flexShrink: 1 },
