@@ -66,6 +66,15 @@ export const PRESETS: (CaseMeta & { key: string; spec: Spec })[] = [
     spec: { asset: 'OAT-30A', side: 'buy', amount: 25000, counterparty: 'Banque Horizon BFI' },
   },
 ];
+if (transport.mode === 'live') {
+  for (const item of Object.values(CASES)) item.text = item.text.replace(/OAT (10|30) ans/g, 'OAT 2034').replace(/EuroTech/g, 'Lumen SA');
+  for (const item of PRESETS) {
+    item.text = item.text.replace(/OAT (10|30) ans/g, 'OAT 2034');
+    item.spec.asset = 'FR-OAT-2034';
+    if (item.spec.counterparty === 'Banque Horizon BFI') item.spec.counterparty = 'BNP-SECURITIES-SIM';
+  }
+}
+
 
 export function latestRun(scenarioId: string): Run | null {
   for (let i = store.runOrder.length - 1; i >= 0; i--) {

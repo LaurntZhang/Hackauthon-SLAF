@@ -11,7 +11,7 @@ import { HitlCard } from '../components/HitlCard';
 import { Icon } from '../components/Icon';
 import { Brand, ThemeToggle } from '../components/Tower';
 import { Button, Txt } from '../components/ui';
-import { store } from '../engine';
+import { store, transport } from '../engine';
 import type { HitlCardData } from '../engine/types';
 import * as app from '../state/app';
 import { useTheme } from '../theme/ThemeProvider';
@@ -34,7 +34,7 @@ export default function Gerant() {
 
   const tx = card ? store.txs.get(card.correlation_id) : null;
   // Carte reçue d'un autre onglet : la tour de contrôle distante vérifie et applique la décision.
-  const isRemote = Boolean(card && !tx);
+  const isRemote = Boolean(transport.mode === 'sim' && card && !tx);
   let resolved: string | null = null;
   if (card && isRemote) resolved = ui.remoteResolved && ui.remoteResolved.thread_id === card.thread_id ? ui.remoteResolved.status : null;
   else if (tx && tx.hitl && tx.hitl.status !== 'pending') resolved = tx.hitl.status;

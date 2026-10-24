@@ -9,7 +9,8 @@ import './legacy/simulator';
 import './legacy/store';
 import './legacy/transport';
 
-import type { AuditEvent, Decision, Store, Transport } from './types';
+import { LIVE_ASSETS } from './liveCatalog';
+import type { Decision, Store, Transport } from './types';
 
 const MA: any = (globalThis as any).ManAgent;
 
@@ -33,68 +34,19 @@ export const cryptoLib: {
 } = MA.crypto;
 export const errors: { Aborted: any; BusyError: any; PreconditionError: any } = MA.errors;
 
-class SimTransport implements Transport {
-  mode = 'sim' as const;
-  private sim: any;
-
-  constructor(private store: any) {
-    this.sim = new MA.Simulator({
-      onEvent: (event: AuditEvent) => store.ingest(event),
-      onTamper: (info: unknown) => store.applyTamper(info),
-    });
-  }
-
-  runScenario(key: string) {
-    return this.sim.runScenario(key);
-  }
-  submitObjective(spec: { asset: string; side: string; amount: number; counterparty: string }) {
-    return this.sim.submitObjective(spec);
-  }
-  async decide(threadId: string, decision: Decision) {
-    return this.sim.decideHitl(threadId, decision);
-  }
-  async requestReport(threadId: string) {
-    return this.sim.requestReport(threadId);
-  }
-  async killSwitch(engage: boolean) {
-    if (engage) this.sim.engageKillSwitch();
-    else this.sim.releaseKillSwitch();
-  }
-  async liftQuarantine(agentId: string) {
-    this.sim.liftQuarantine(agentId);
-  }
-  async resetBreaker() {
-    this.sim.resetBreaker();
-  }
-  async verify() {
-    return this.sim.verifyChain();
-  }
-  async tamper() {
-    return this.sim.tamperAudit();
-  }
-  async restore() {
-    return this.sim.restoreAudit();
-  }
-  async reset() {
-    this.sim.reset();
-    this.store.reset();
-  }
-  setFast(fast: boolean) {
-    this.sim.setFast(fast);
-  }
-}
-
 export const store: Store = new MA.Store();
 
 const apiBase = process.env.EXPO_PUBLIC_MANAGENT_API;
+if (apiBase) Object.assign(C.ASSETS, LIVE_ASSETS);
 
 class UnsupportedLiveTransport implements Transport {
   mode = 'live' as const;
-  private readonly message = 'Le mode live du front v2 nécessite Expo Web avec EventSource.';
+  private readonly message = 'Le mode live nécessite Expo Web avec EventSource.';
 
-  constructor(private store: Store) {
-    this.store.setConnection('mode live indisponible sur cette plateforme');
+  constructor(private readonly liveStore: Store) {
+    this.liveStore.setConnection('mode live indisponible sur cette plateforme');
   }
+
   private unavailable(): never { throw new Error(this.message); }
   async runScenario(_key: string): Promise<unknown> { return this.unavailable(); }
   async submitObjective(_spec: { asset: string; side: string; amount: number; counterparty: string }): Promise<unknown> { return this.unavailable(); }
@@ -114,4 +66,4 @@ const normalizedApiBase = apiBase ? apiBase.replace(/\/$/, '') : null;
 const hasEventSource = typeof (globalThis as any).EventSource === 'function';
 export const transport: Transport = normalizedApiBase
   ? (hasEventSource ? new MA.LiveTransport(store, normalizedApiBase) : new UnsupportedLiveTransport(store))
-  : new SimTransport(store);
+  : new MA.SimTransport(store);

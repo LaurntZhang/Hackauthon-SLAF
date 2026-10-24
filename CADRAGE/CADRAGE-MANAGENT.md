@@ -168,9 +168,15 @@ déclencher qu'une **quarantaine d'agent** ; seul l'humain peut couper globaleme
 - **Clients :** front v2 Expo / React Native Web (`src/front`) pour la tour de contrôle et l'écran du gérant ;
   front HTML/JS v1 (`src/api/static`) conservé et servi par FastAPI. Le simulateur v2 est le mode par défaut.
   `EXPO_PUBLIC_MANAGENT_API` active le transport live v2 sur Expo Web. La liaison REST/SSE et l'approbation HITL
-  par PIN sont intégrées. Au 24/10/2026, `npm ci` et le typecheck Expo sont validés ; Expo Web démarre avec
-  l'URL FastAPI configurée. La validation dans le navigateur, S1/S2/HITL et l'audit final du v2 restent à faire.
-  Le parcours live S1/S2 déjà retesté concerne le v1. La cible native reste en simulation tant qu'un transport
+  par PIN sont intégrées. Au 24/10/2026, le typecheck et l'export web Expo sont validés ; Expo Web démarre avec
+  l'URL FastAPI configurée. Le retest navigateur v2 indique `API live · connecté`, SSE connecté, S1 exécuté (1 427 événements
+  affichés après le scénario) et S2/HITL approuvé par PIN puis exécuté (1 444 événements affichés). **Diagnostic :**
+  `.integration-worktree/logs/v2-integration-test.jsonl` contient les deux corrélations (S1 séquences 1413–1427, S2
+  1428–1444) dans une chaîne valide. L'API `:8017` renvoie bien cet audit de 1 444 événements ; l'API `:8000` sert
+  une autre chaîne valide, `logs/audit.jsonl`, de 220 lignes, terminée sur l'ancien dossier `cor-947ba37fa7d1`.
+  L'écart venait de la consultation de l'ancien port `:8000` après un parcours v2 sur `:8017`. Le parcours est
+  réconcilié en consultant `/audit/*` sur `:8017` ; aucun nouveau scénario ni correctif de code n'est requis.
+  Le parcours live S1/S2 déjà retesté antérieurement concerne le v1. La cible native reste en simulation tant qu'un transport
   SSE natif n'est pas disponible. La CLI `run_demo.py` est le plan B côté back.
 - **Un seul processus Python** lancé par uvicorn : l'API FastAPI, puis le **StateGraph LangGraph** à
   12 nœuds, avec les nœuds agents en bleu et les nœuds de contrôle en vert.

@@ -82,19 +82,24 @@
       this.store = store;
       this.base = base;
       this.busy = false;
-      this.lastSequence = 0;
-      this.receiveQueue = Promise.resolve();
-      this.ready = this.hydrate().finally(() => this.connect());
-      this.pendingPoll = window.setInterval(() => this.syncPending(), 2000);
+      this.runtimeId = 'main';
+      this.ready = typeof window === 'undefined' ? Promise.resolve() : this.hydrate().then(() => this.connect());
+      this.ready.catch(() => {});
+      this.pendingPoll = typeof window === 'undefined' ? null : setInterval(() => this.syncPending(), 2000);
     }
 
     async syncPending() {
       try {
-        const pending = (await this.request('GET', '/approvals')).map((card) => this.normalizeApproval(card));
-        const card = pending[0] || null;
+        const pending = await this.request('GET', '/approvals');
+        const card = pending[0] ? this.normalizeCard(pending[0]) : null;
+        if (card?.runtime_id) this.runtimeId = card.runtime_id;
         const current = this.store.pending;
         if ((current && current.thread_id) !== (card && card.thread_id)) {
           this.store.pending = card ? { thread_id: card.thread_id, corr: card.correlation_id, card } : null;
+          if (card) {
+            const tx = this.store.txs.get(card.correlation_id);
+            if (tx) tx.hitl = { card, status: 'pending', requestedAt: card.requested_at };
+          }
           this.pendingThreadId = card && card.thread_id;
           this.store.mark('pending');
         }
@@ -105,22 +110,22 @@
 
     async hydrate() {
       try {
-        const [controls, pendingResponse, audit, events] = await Promise.all([
+        const [controls, rawPending, audit, events] = await Promise.all([
           this.request('GET', '/controls/state'),
           this.request('GET', '/approvals'),
           this.request('GET', '/audit/verify'),
           this.request('GET', '/audit/events?limit=5000'),
         ]);
-        const pending = pendingResponse.map((card) => this.normalizeApproval(card));
+        const pending = rawPending.map(card => this.normalizeCard(card));
         this.store.reset();
         this.pendingThreadId = pending[0] && pending[0].thread_id;
+        if (pending[0]?.runtime_id) this.runtimeId = pending[0].runtime_id;
         for (const sourceEvent of events) {
           const event = this.normalizeEvent(sourceEvent);
-          this.lastSequence = Math.max(this.lastSequence, Number(event.sequence) || 0);
           if (event.action === 'hitl.requested') {
             const card = pending.find((item) => item.correlation_id === event.correlation_id);
             if (card) {
-              event.context.card = this.normalizeApproval(card, event.timestamp);
+              event.context.card = this.normalizeCard(card, event.timestamp);
               this.pendingThreadId = card.thread_id;
             }
           }
@@ -140,18 +145,24 @@
         }]));
         this.store.setVerification(audit);
         if (pending.length) {
-          const card = pending[0];
+          const card = this.normalizeCard(pending[0]);
           this.pendingThreadId = card.thread_id;
           this.store.pending = { thread_id: card.thread_id, corr: card.correlation_id, card };
         }
+        const latest = [...events].reverse().find(e => e.runtime_id);
+        this.runtimeId = pending[0]?.runtime_id || latest?.runtime_id || 'main';
+        await this.syncControls();
         this.store.mark('all');
       } catch (err) {
-        console.warn('[ManAgent] état initial API indisponible', err);
+        this.store.setConnection('État initial indisponible : ' + err.message);
+        throw err;
       }
     }
 
     connect() {
-      this.source = new EventSource(`${this.base}/events?since=${this.lastSequence}`);
+      if (typeof window === 'undefined') return;
+      if (!globalThis.EventSource) { this.store.setConnection('SSE indisponible : utilisez le web'); return; }
+      this.source = new globalThis.EventSource(this.base + '/events?replay=true');
       this.source.onopen = () => this.store.setConnection('connecté');
       this.source.onerror = () => this.store.setConnection('reconnexion…');
       const actions = [
@@ -159,9 +170,9 @@
         'intent_proposed', 'policy_evaluated', 'judge_verdict',
         'quorum_decided', 'hitl_requested', 'human_decision', 'authorization_issued', 'order_prepared',
         'integrity_checked', 'risk_checked', 'circuit_breaker_opened', 'execution_blocked', 'order_executed',
-        'trust_updated', 'agent_quarantined', 'agent_released', 'intent_not_produced', 'hitl_signature_rejected',
-        'llm_fallback', 'observability_degraded', 'control_denied', 'kill_switch_engaged', 'kill_switch_released',
-        'circuit_breaker_rearmed', 'quarantine_released',
+        'trust_updated', 'agent_quarantined', 'kill_switch_engaged', 'kill_switch_released',
+        'circuit_breaker_rearmed', 'quarantine_released', 'control_denied', 'supervisor_alert',
+        'llm_fallback', 'intent_not_produced', 'hitl_signature_rejected', 'observability_degraded',
       ];
       const receive = async (message) => {
         let parsed;
@@ -174,28 +185,26 @@
           }
           throw err;
         }
+        if (this.store.eventHashes.has(parsed.hash)) return;
         const event = this.normalizeEvent(parsed);
-        const sequence = Number(event.sequence) || 0;
-        if (sequence && sequence <= this.lastSequence) return;
-        if (sequence) this.lastSequence = sequence;
         if (event.action === 'hitl.requested') {
           for (let attempt = 0; attempt < 5; attempt++) {
             try {
-              const pending = (await this.request('GET', '/approvals')).map((card) => this.normalizeApproval(card));
+              const pending = await this.request('GET', '/approvals');
               const card = pending.find((item) => item.correlation_id === event.correlation_id);
               if (card) {
-                event.context.card = this.normalizeApproval(card, event.timestamp);
+                event.context.card = this.normalizeCard(card, event.timestamp);
                 this.pendingThreadId = card.thread_id;
                 break;
               }
             } catch (err) {
               console.warn('[ManAgent] approbations en attente indisponibles', err);
             }
-            await new Promise((resolve) => window.setTimeout(resolve, 200));
+            await new Promise((resolve) => setTimeout(resolve, 200));
           }
         }
         this.store.ingest(event);
-        if (event.action === 'transaction.completed') {
+        if (parsed.action === 'transaction_completed') {
           try {
             const audit = await this.request('GET', '/audit/verify');
             this.store.setVerification(audit);
@@ -205,20 +214,26 @@
         }
         if (event.action === 'hitl.decided') this.pendingThreadId = null;
       };
-      const enqueue = (message) => {
-        this.receiveQueue = this.receiveQueue
-          .then(() => receive(message))
-          .catch((err) => {
-            console.warn('[ManAgent] événement SSE impossible à traiter', err);
-            this.store.reportInvalid((err && err.message) || 'événement SSE impossible à traiter', message.data);
-          });
-      };
+      let queue = Promise.resolve();
+      const enqueue = (message) => { queue = queue.then(() => receive(message)).catch((err) => this.store.setConnection(err.message)); };
       for (const action of actions) this.source.addEventListener(action, enqueue);
       this.source.onmessage = enqueue;
     }
 
+    dispose() {
+      clearInterval(this.pendingPoll);
+      this.source?.close();
+    }
+
+    normalizeCard(card, requestedAt) {
+      const timestamp = requestedAt || this.store.events.find(e => e.action === 'hitl.requested' && e.correlation_id === card.correlation_id)?.timestamp;
+      return { ...card, asset_label: MA.fmt.assetLabel(card.intent.asset), requested_at: timestamp || null };
+    }
+
     normalizeEvent(parsed) {
       const aliases = {
+        kill_switch_engaged: 'killswitch.engaged', kill_switch_released: 'killswitch.released',
+        circuit_breaker_rearmed: 'breaker.reset', quarantine_released: 'agent.released', supervisor_alert: 'supervisor.alert',
         transaction_received: 'transaction.received', transaction_completed: 'transaction.completed',
         content_flagged: 'firewall.scanned', content_inspected: 'firewall.scanned', intent_proposed: 'intent.proposed',
         policy_evaluated: 'policy.evaluated', judge_verdict: 'judge.voted', quorum_decided: 'quorum.decided',
@@ -226,13 +241,13 @@
         order_prepared: 'order.prepared', integrity_checked: 'integrity.checked', risk_checked: 'risk.checked',
         circuit_breaker_opened: 'breaker.opened', execution_blocked: 'transaction.blocked',
         order_executed: 'execution.filled', trust_updated: 'trust.updated', agent_quarantined: 'agent.quarantined',
-        agent_released: 'agent.released', kill_switch_engaged: 'killswitch.engaged',
-        kill_switch_released: 'killswitch.released', circuit_breaker_rearmed: 'breaker.reset',
-        quarantine_released: 'agent.released',
       };
-      const event = { ...parsed, action: aliases[parsed.action] || parsed.action, context: { ...(parsed.context || {}) } };
-      if (event.context.intent && event.context.intent.amount !== undefined) {
-        event.context.intent.amount = Number(event.context.intent.amount);
+      const event = { ...parsed, rawEvent: parsed, action: aliases[parsed.action] || parsed.action, context: { ...(parsed.context || {}) } };
+      if (event.action === 'transaction.completed' && ['blocked', 'rejected', 'reported'].includes(event.status)) {
+        const tx = this.store.txs.get(event.correlation_id);
+        event.action = 'transaction.blocked';
+        event.context.stage = tx?.policy?.outcome === 'BLOCK' ? 'policy' : tx?.hitl?.status === 'rejected' ? 'hitl' : tx?.integrity?.ok === false ? 'integrity' : 'governor';
+        event.context.triggered_rules = tx?.policy?.triggered_rules || [];
       }
       if (event.action === 'policy.evaluated') {
         event.status = ({ allow: 'ALLOW', escalate: 'ESCALATE', block: 'BLOCK' })[event.status] || event.status;
@@ -253,7 +268,7 @@
         event.context.agent = event.context.agent_id;
         event.context.after = event.context.current;
       }
-      if (event.action === 'agent.quarantined') event.context.agent = event.context.agent_id;
+      if (event.action === 'agent.quarantined' || event.action === 'agent.released') event.context.agent = event.context.agent_id;
       if (event.action === 'risk.checked') {
         const source = event.context.snapshot || {};
         const fallback = this.deriveRiskSnapshot(event);
@@ -271,21 +286,12 @@
           freq_limit: numeric(source.freq_limit, fallback.freq_limit),
         };
       }
+      if (event.action === 'authorization.created') event.context.authorization = event.context.authorization || event.context;
       if (event.action === 'hitl.decided') {
         event.status = event.status === 'approve' ? 'approved' : 'rejected';
-        event.context.decision = { ...event.context, thread_id: this.pendingThreadId };
+        event.context.decision = { ...event.context, timestamp: event.timestamp, thread_id: event.context.thread_id || this.store.txs.get(event.correlation_id)?.hitl?.card?.thread_id || this.pendingThreadId };
       }
       return event;
-    }
-
-    normalizeApproval(card, requestedAt) {
-      const intent = card.intent || {};
-      return {
-        ...card,
-        asset_label: card.asset_label || MA.fmt.assetLabel(intent.asset),
-        requested_at: card.requested_at || requestedAt,
-        intent: { ...intent, amount: Number(intent.amount) },
-      };
     }
 
     deriveRiskSnapshot(current) {
@@ -325,12 +331,18 @@
       });
       const type = response.headers.get('content-type') || '';
       const payload = type.includes('json') ? await response.json() : null;
-      if (!response.ok) throw new Error(payload && payload.detail ? payload.detail : `${method} ${path} : HTTP ${response.status}`);
+      if (!response.ok) throw new Error(payload && (payload.detail || payload.message) ? JSON.stringify(payload.detail || payload.message) : `${method} ${path} : HTTP ${response.status}`);
       return payload;
     }
 
     runScenario(key) {
-      return this.ready.then(() => this.request('POST', `/scenarios/${encodeURIComponent(key)}`));
+      return this.ready.then(async () => {
+        const result = await this.request('POST', `/scenarios/${encodeURIComponent(key)}`);
+        this.runtimeId = result.runtime_id;
+        await this.syncPending();
+        await this.syncControls();
+        return result;
+      });
     }
 
     submitObjective(spec) {
@@ -340,9 +352,10 @@
         'Apex Capital Partners': 'SG-CIB-SIM',
         'Nexus Trading Ltd': 'EXANE-SIM',
       };
-      return this.ready.then(() => this.request('POST', '/transactions', {
+      return this.ready.then(async () => {
+        const result = await this.request('POST', '/transactions', {
         proposal: {
-          asset: spec.asset,
+          asset: spec.asset === 'OAT-10A' ? 'FR-OAT-2034' : spec.asset,
           asset_type: asset ? asset.type : 'equity',
           side: spec.side,
           amount: String(spec.amount),
@@ -350,7 +363,12 @@
           rationale: `Opération initiée depuis la tour de contrôle (${spec.side} ${spec.asset}).`,
           confidence: 0.85,
         },
-      }));
+        });
+        this.runtimeId = result.runtime_id;
+        await this.syncPending();
+        await this.syncControls();
+        return result;
+      });
     }
 
     async decide(threadId, decision) {
@@ -359,7 +377,8 @@
           action: decision.action,
           pin: decision.pin,
         });
-        return { ok: true, signature: result && result.human_decision && result.human_decision.signature };
+        await this.syncPending();
+        return { ok: true, signature: result.human_decision?.signature };
       } catch (err) {
         return { ok: false, error: err.message };
       }
@@ -389,7 +408,19 @@
     async demoControl(action, agentId) {
       const pin = window.prompt('Code opérateur de démonstration (4 chiffres) :');
       if (pin === null) return;
-      return this.request('POST', '/controls/demo', { action, pin, agent_id: agentId });
+      const result = await this.request('POST', '/controls/demo', { action, pin, agent_id: agentId, runtime_id: this.runtimeId });
+      await this.syncControls();
+      return result;
+    }
+
+    async syncControls() {
+      const state = await this.request('GET', '/controls/state?runtime_id=' + encodeURIComponent(this.runtimeId));
+      this.store.kill = { global: state.kill_switch.global_engaged, by: state.kill_switch.global_stop?.actor_id, at: state.kill_switch.global_stop?.engaged_at };
+      this.store.risk.breaker = state.circuit_breaker.open ? 'open' : 'closed';
+      this.store.risk.freq = state.circuit_breaker.orders_last_minute;
+      this.store.risk.rejects = state.circuit_breaker.consecutive_rejections;
+      this.store.agents = Object.fromEntries(state.agents.map(a => [a.agent_id, { trust: a.trust_score, quarantined: a.quarantined }]));
+      this.store.mark('all');
     }
 
     verify() {

@@ -35,12 +35,13 @@ class DemoControlRequest(BaseModel):
     action: Literal["release_kill", "release_quarantine", "rearm_breaker"]
     pin: str = Field(pattern=r"^\d{4}$")
     agent_id: str | None = Field(default=None, max_length=60)
+    runtime_id: str = Field(default=MAIN_RUNTIME_ID, max_length=80)
 
 
 @router.post("/controls/demo")
 def demo_control(body: DemoControlRequest, system: SystemDep) -> dict[str, object]:
     """Exécute une commande de démonstration signée côté serveur, sans livrer la clé HMAC au front."""
-    runtime = system.main
+    runtime = system.runtime(body.runtime_id)
     if not runtime.verifier.uses_demo_secret:
         raise HTTPException(status_code=409, detail="Les commandes par PIN sont désactivées hors secret de démonstration.")
     if body.pin != os.getenv("FINGUARD_DEMO_PIN", "1234"):

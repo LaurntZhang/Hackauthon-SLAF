@@ -42,15 +42,10 @@ def create_app(system: FinGuardSystem | None = None) -> FastAPI:
         ),
         lifespan=lifespan,
     )
-    configured_origins = [
-        origin.strip()
-        for origin in os.getenv("FINGUARD_CORS_ORIGINS", "").split(",")
-        if origin.strip()
-    ]
+    origins = os.getenv("FINGUARD_CORS_ORIGINS", "http://localhost:8081,http://127.0.0.1:8081")
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=configured_origins,
-        allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1):\d+$",
+        allow_origins=[origin.strip() for origin in origins.split(",") if origin.strip()],
         allow_methods=["GET", "POST"],
         allow_headers=["Content-Type", "Last-Event-ID"],
     )
