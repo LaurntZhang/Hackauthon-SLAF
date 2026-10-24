@@ -42,6 +42,11 @@ chiffrées et données synthétiques. Le marché est simulé.
 
 **Stack prévue :** Python 3.13 · LangGraph · Pydantic v2 · FastAPI + SSE · pytest · Langfuse (optionnel).
 
+## Coûts et déploiement
+
+- [Coûts de mise en œuvre et coût de fonctionnement](docs/hackathon/costs-and-tco.md)
+- [Déploiement en environnement réel](docs/hackathon/deployment-real-environment.md)
+
 ## Contrat de données partagé
 
 Le schéma commun aux agents, au module FinGuard, à l'API et au dashboard est figé dans
