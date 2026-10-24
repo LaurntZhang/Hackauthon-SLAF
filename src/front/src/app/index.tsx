@@ -8,7 +8,7 @@ import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-n
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ActionBar, Brand, ExplainPanel, Notices, SideLinks, StepTracker, SummaryCards, ThemeToggle, Toolbar } from '../components/Tower';
-import { FlowCanvas } from '../components/FlowCanvas';
+import { BisFlow } from '../components/bis/BisFlow';
 import { ConfirmDialog, DetailsSheet, PhoneModal, ScenarioMenu } from '../components/Overlays';
 import { Button, IconButton, Txt } from '../components/ui';
 import { autoStep, computeSteps, currentTx, verdictOf } from '../domain/steps';
@@ -16,7 +16,7 @@ import * as app from '../state/app';
 import { useTheme } from '../theme/ThemeProvider';
 import { fonts, fs, radius, space } from '../theme/tokens';
 
-export default function Tower() {
+export default function TowerBis() {
   const { colors } = useTheme();
   const { ui } = app.useApp();
   const { width } = useWindowDimensions();
@@ -97,7 +97,7 @@ export default function Tower() {
             </View>
             <View onLayout={(e) => setCanvasW(Math.floor(e.nativeEvent.layout.width))} style={{ alignItems: 'center' }}>
               {canvasW > 0 ? (
-                <FlowCanvas width={canvasW >= 860 ? canvasW : Math.min(canvasW, 560)} data={data} shown={shown} onSelect={app.selectStep} />
+                <BisFlow width={canvasW >= 860 ? canvasW : Math.min(canvasW, 560)} data={data} shown={shown} onSelect={app.selectStep} />
               ) : null}
             </View>
           </View>
